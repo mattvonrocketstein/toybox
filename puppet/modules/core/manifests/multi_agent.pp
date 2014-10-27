@@ -39,17 +39,17 @@ class core::multi_agent{
     unless  => 'pip freeze | grep "librabbitmq==1.5.2"'
   }
 
-  exec { 'gem install genghisapp':
+  exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "genghisapp"'
   }
-  exec { 'gem install bson_ext -v 1.9.2':
+  exec { 'sudo gem install bson_ext -v 1.9.2':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "bson_ext (1.9.2)"'
   }
   # see https://forge.puppetlabs.com/proletaryo/supervisor
   class { 'supervisor':
-    include_superlance      => false,
+    include_superlance      => true,
     enable_http_inet_server => true,
   }
 
