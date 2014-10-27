@@ -1,0 +1,6 @@
+libpeerconnection.log
+*.pyc
+*.elc
+#*
+*#
+.vagrant
