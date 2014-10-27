@@ -3,4 +3,6 @@ libpeerconnection.log
 *.elc
 #*
 *#
+host_venv
+guest_venv
 .vagrant

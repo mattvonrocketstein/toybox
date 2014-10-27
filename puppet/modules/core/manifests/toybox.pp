@@ -1,6 +1,6 @@
-# puppet/modules/core/manifests/multi_agent.pp
+# puppet/modules/core/manifests/toybox.pp
 #
-class core::multi_agent{
+class core::toybox{
 
   package { 'mongodb':
     ensure => installed,
@@ -65,13 +65,5 @@ class core::multi_agent{
     enable      => true,
     command     => $gcmd,
     environment => 'HOME=/home/vagrant',
-  }
-  # see https://github.com/opencredo/neo4j-puppet
-  include neo
-  exec {
-    'install-neo-python':
-      require => Package['python-pip'],
-      command => 'pip install neo4j-embedded',
-      unless  => 'pip freeze|grep neo4j-embedded'
   }
 }

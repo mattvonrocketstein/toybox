@@ -1,24 +1,30 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Ask the environment for some facts about whether
+# the user has requested the optional provisioning
+FACTER = {}
+FACTER[:vagrant_provision_xwin] = ENV["PROVISION_XWIN"] or ""
+FACTER[:vagrant_provision_neo] = ENV["PROVISION_NEO"] or ""
+
 VAGRANTFILE_API_VERSION = "2" # Vagrantfile API/syntax version.
-DEFAULT_NAME = "nomad" # used for hostname and virtualbox nickname
+DEFAULT_NAME = "toybox" # used for hostname and virtualbox nickname
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "trusty64"
   config.vm.hostname = DEFAULT_NAME
 
   # The port map which creates access between guest/host:
   #   15672: this entry is for the rabbitmq WUI
-  #   5555: this entry is for the flower WUI
-  #   5556: this entry is for the genghisapp WUI
-  #   9001: this entry is for the supervisor WUI
-  #   7474: this entry is for the neo4j data/WUI
+  #   5555:  this entry is for the flower WUI
+  #   5556:  this entry is for the genghisapp WUI
+  #   9001:  this entry is for the supervisor WUI
+  #   7474:  this entry is for the neo4j data/WUI
   config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 15672, host: 15672
   config.vm.network "forwarded_port", guest: 5555, host: 5555
   config.vm.network "forwarded_port", guest: 5556, host: 5556
-  config.vm.network "forwarded_port", guest: 7474, host: 7474
   config.vm.network "forwarded_port", guest: 9001, host: 9001
+  config.vm.network "forwarded_port", guest: 7474, host: 7474
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. Options are provider-specific.
@@ -32,8 +38,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
   config.vm.provision :puppet, :options => "--no-report" do |puppet|
-    puppet.options = "--verbose --debug"
+    puppet.options        = "--verbose --debug"
     puppet.manifests_path = "puppet"
+    puppet.facter         = FACTER
     puppet.manifest_file  = "default.pp"
     puppet.module_path    = "puppet/modules"
   end
