@@ -9,14 +9,14 @@ node default {
   class{'site::configuration': stage => last }
 
   class { "nginx":
-    source_dir       => "puppet:///modules/site/nginx",
+    source_dir       => "puppet:///modules/site/nginx_conf",
     source_dir_purge => false,
   }
   include core::basic_dev
   include core::toybox
 
   if $vagrant_provision_xwin {
-    include core::xwindows
+    include site::xwindows
   }
 
   if $vagrant_provision_neo {
