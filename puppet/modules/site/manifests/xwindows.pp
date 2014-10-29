@@ -1,5 +1,6 @@
-# puppet/modules/core/manifests/xwindows.pp
-class core::xwindows{
+# puppet/modules/site/manifests/xwindows.pp
+#
+class site::xwindows{
   $xwindows_xwin_base=['xinit']
   $xwindows_wm_utils = ['xmonad', 'gmrun', 'stalonetray']
   $xwindows_dev_tools = ['emacs23']
