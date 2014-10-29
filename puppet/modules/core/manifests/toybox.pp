@@ -6,6 +6,12 @@ class core::toybox{
     ensure => installed,
   }
 
+  mongodb_database { testdb:
+    ensure   => present,
+    tries    => 10,
+    require  => Package['mongodb']
+  }
+
   class { 'rabbitmq':
     service_manage    => true,
     delete_guest_user => false
