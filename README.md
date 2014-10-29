@@ -47,7 +47,7 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
     * version @ 3.0
     * responsible for daemonizing flower
     * responsible for daemonizing genghisapp
-    * default port WUI port @ 9001
+    * WUI port @ 9001
     * see Vagrantfile to check if port-forwarding is enabled
 * [nginx](http://nginx.org/en/docs/): a webserver with fairly sane configs
     * version @ 1.4.6
