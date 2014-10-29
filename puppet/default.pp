@@ -1,4 +1,5 @@
 # default.pp
+#
 node default {
   Exec { path => "/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin"}
   stage { first: before => Stage[main] }
@@ -7,7 +8,10 @@ node default {
   class{'site::update_apt': stage => first }
   class{'site::configuration': stage => last }
 
-  include nginx
+  class { "nginx":
+    source_dir       => "puppet:///modules/site/nginx",
+    source_dir_purge => false,
+  }
   include core::basic_dev
   include core::toybox
 

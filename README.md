@@ -1,18 +1,25 @@
+[intro](#intro) | [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox) | [optional stuff](#optional-provisioning) | [testing](#test-from-host) | [quick-links](#quick-links)
+
 ##Toybox
 
+<a name="intro"/>
 Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other custom automation.
 
+<a name="requirements"/>
 ##Build target/reference versions:
 
-Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that currently only some random subset of the toys will work with redhat/centos.  At least across recent Ubuntu versions, the puppet code is probably _(possibly maybe hopefully)_ fairly generic.  A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Usage" section).  If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin [vbguest plugin](https://github.com/dotless-de/vagrant-vbguest).  Download vagrant [here](http://www.vagrantup.com/downloads.html), download virtualbox [here](https://www.virtualbox.org/wiki/Downloads).
+Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that currently only some random subset of the toys will work with redhat/centos.  At least across recent Ubuntu versions, the puppet code is probably _(possibly? maybe? hopefully??)_ fairly generic.
 
+A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Usage" section).  If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin [vbguest plugin](https://github.com/dotless-de/vagrant-vbguest).  Download vagrant [here](http://www.vagrantup.com/downloads.html), download virtualbox [here](https://www.virtualbox.org/wiki/Downloads).
 
+<a name="batteries"/>
 ##Basic batteries are included:
 * misc: git, ack-grep, nmap, screen, and tree
 * basic dev:
     * ruby: ruby 1.9.3, ruby-dev, gem
     * python: python 2.7.6, python-pip, python-dev, python-virtualenv
 
+<a name="toybox"/>
 ##Other toys in the toybox
 * [mongodb](http://www.mongodb.org): a popular nosql database
     * default port @ ??
@@ -20,14 +27,14 @@ Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that
     * started by default on system boot
     * [genghisapp](http://genghisapp.com): a data viz tool for mongo
         * version @ 2.3.11
-        * WUI port @ 5555
+        * WUI port at 5556
         * see Vagrantfile to check if port-forwarding is enabled
 * [rabbitmq](https://www.rabbitmq.com): a message queue
     * Erlang R16B03 will be installed
     * data port @ 5672
     * rabbit version is 3.4.0
     * users: admin/admin, guest/guest
-    * use WUI at http://admin:admin@localhost:15672
+    * WUI port at 15672
     * see Vagrantfile to check if port-forwarding is enabled
     * [celery](http://celery.readthedocs.org): task queue framework (uses rabbit)
         * celery version is 3.1.6
@@ -45,7 +52,7 @@ Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that
 * [nginx](http://nginx.org/en/docs/): a webserver with fairly sane configs
     * version @ 1.4.6
     * WUI/data port @ 80
-    * no real default configuration
+    * default config is simple: just a rendered version of this markdown
     * see Vagrantfile to check if port-forwarding to host 8080 is enabled
 
 ##Optional toys:
@@ -60,6 +67,7 @@ Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that
     * the sole window manager (XMonad) will be used by default with "startx".
     * xmonad implicitly requires haskell
 
+<a name="usage"/>
 ## Basic Usage
 
 First we'll need to download a couple of things.  Feel free to skip steps below if you have already cloned this repository, if you already know that you have the right base-box downloaded, or if the vagrant plugin is already installed.
@@ -91,6 +99,7 @@ After this, your box should be working.  You can connect to it now, or try runni
    $ vagrant ssh
 ```
 
+<a name="optional-provisioning"/>
 ##Advanced Usage: Provisioning with the optional stuff
 The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.  To install the xwindows stuff, run:
 
@@ -105,6 +114,7 @@ Setting up the neo4j graph database provisioning is similar, but you will need t
   $ PROVISION_NEO=true vagrant provision
 ```
 
+<a name="test-from-host"/>
 ##Advanced Usage: Testing from the host
 By default, the Vagrantfile forwards lots of ports for the services puppet
 is expected to bring up.  During development it can be useful to verify that
@@ -117,7 +127,7 @@ those services are indeed alive.  To bootstrap the testing-setup on the host:
   $ python tests/test_guest_from_host.py
 ```
 
-##Advanced Usage: Testing from the guest
+##Advanced Usage: Testing from the guest <a name="test-from-layout"/>
 Currently, the only thing testable from the guest is celery/rabbit.  To run
 those tests,
 
@@ -128,6 +138,7 @@ those tests,
   $ python tests/test_guest_from_guest.py
 ```
 
+<a name="puppet-layout"/>
 ##Implementation Remarks: The Puppet Layout
 * Entry-point is `puppet/default.pp` (as named in the Vagrantfile)
     * This is probably your starting place for fork-and-mod hacks
@@ -138,12 +149,26 @@ those tests,
     * Stages are used to guarantee aspects of the run-order
         * see [puppet language guide](http://docs.puppetlabs.com/guides/language_guide.html) and the section "Run Stages"
 
+<a name="credits"/>
+##Quick links:
+This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
+
+* [genghis](http://admin:admin@localhost:5556)
+* [flower](http://admin:admin@localhost:5555)
+* [rabbitmq](http://admin:admin@localhost:15672)
+* [supervisor](http://admin:admin@localhost:9001)
+* [nginx](http://admin:admin@localhost:8080)
+* [neo](http://admin:admin@localhost:7474)
+
+<a name="todo"/>
 ##TODO:
 * Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)
 
+<a name="credits"/>
 ##Credits:
 Puppet is a crappy language for many reasons, but the worst thing about it is how difficult it is to reuse other code without forking.  Apart from puppet forge standard libraries included in this repo, I have benefited from the work mentioned below:
 
 * https://github.com/opencredo/neo4j-puppet
 * https://github.com/aubricus/vagrant-puppet-boilerplate
 * https://forge.puppetlabs.com/proletaryo/supervisor
+* https://github.com/netmanagers/puppet-nginx
