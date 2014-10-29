@@ -1,1 +1,8 @@
-/etc/nginx/sites-available/default
+server {
+    listen          80;
+    server_name     localhost;
+
+    location / {
+        root /vagrant;
+    }
+}
