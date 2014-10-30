@@ -43,7 +43,7 @@
                 </h3>
               
               <div class="markdown-body entry-content">
-                <p><a href="#intro">intro</a> | <a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a> | <a href="#optional-provisioning">optional stuff</a> | <a href="#test-from-host">testing</a> | <a href="#quick-links">quick-links</a></p>
+                <p><a href="#intro">intro</a> | <a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a> | <a href="#optional-provisioning">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> |<a href="#quick-links">quick-links</a></p>
 
 <h2>
 <a name="user-content-toybox" class="anchor" href="#toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toybox</h2>
@@ -136,7 +136,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 <li>version @ 3.0</li>
 <li>responsible for daemonizing flower</li>
 <li>responsible for daemonizing genghisapp</li>
-<li>default port WUI port @ 9001</li>
+<li>WUI port @ 9001</li>
 <li>see Vagrantfile to check if port-forwarding is enabled</li>
 </ul>
 </li>
@@ -146,7 +146,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 <ul>
 <li>version @ 1.4.6</li>
 <li>WUI/data port @ 80</li>
-<li>no real default configuration</li>
+<li>default config is simple: just a rendered version of this markdown</li>
 <li>see Vagrantfile to check if port-forwarding to host 8080 is enabled</li>
 </ul>
 </li>
@@ -223,14 +223,14 @@ Toybox is a template that builds an awesome development environment for virtualb
   <span class="nv">$ PROVISION_NEO</span><span class="o">=</span><span class="nb">true </span>vagrant provision
 </pre></div>
 
-<p><a name="user-content-test-from-host" aria-hidden="true"></a></p>
+<p><a name="user-content-running-tests" aria-hidden="true"></a></p>
 
 <h2>
-<a name="user-content-advanced-usage-testing-from-the-host" class="anchor" href="#advanced-usage-testing-from-the-host" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Testing from the host</h2>
+<a name="user-content-advanced-usage-running-tests" class="anchor" href="#advanced-usage-running-tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Running Tests</h2>
 
-<p>By default, the Vagrantfile forwards lots of ports for the services puppet
-is expected to bring up.  During development it can be useful to verify that
-those services are indeed alive.  To bootstrap the testing-setup on the host:</p>
+<p>Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the <code>/vagrant</code> directory.</p>
+
+<p>By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:</p>
 
 <div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>virtualenv host_venv
   <span class="nv">$ </span><span class="nb">source </span>host_venv/bin/activate
@@ -238,17 +238,26 @@ those services are indeed alive.  To bootstrap the testing-setup on the host:</p
   <span class="nv">$ </span>python tests/test_guest_from_host.py
 </pre></div>
 
+<p>During normal provisioning, <code>guest_venv</code> is setup automatically.  To run tests on the guest from the guest, run this command from the host:</p>
+
+<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>vagrant ssh -c /vagrant/guest_venv/bin/python /vagrant/tests/test_guest
+</pre></div>
+
+<p><a name="user-content-running-demos" aria-hidden="true"></a></p>
+
 <h2>
-<a name="user-content-advanced-usage-testing-from-the-guest-" class="anchor" href="#advanced-usage-testing-from-the-guest-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Testing from the guest <a name="user-content-test-from-layout" aria-hidden="true"></a>
-</h2>
+<a name="user-content-advanced-usage-running-demos" class="anchor" href="#advanced-usage-running-demos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Running Demos</h2>
 
-<p>Currently, the only thing testable from the guest is celery/rabbit.  To run
-those tests,</p>
+<p>During default provisioning, databases and message queues and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>virtualenv guest_venv
-  <span class="nv">$ </span><span class="nb">source </span>guest_venv/bin/activate
-  <span class="nv">$ </span>pip install -r tests/requirements.txt
-  <span class="nv">$ </span>python tests/test_guest_from_guest.py
+<p>Currently, the only demo is for celery/rabbit.  To run that demo, execute something like this from the guest after using <code>vagrant ssh</code>.</p>
+
+<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span><span class="nb">source</span> /vagrant/guest_venv/bin/activate
+  <span class="c"># send 1000 tasks to add worker, 500 to subtract worker</span>
+  <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --add -n 1000
+  <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --add -n 500
+  <span class="c"># start a worker to deal with tasks</span>
+  <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --worker
 </pre></div>
 
 <p><a name="user-content-puppet-layout" aria-hidden="true"></a></p>
@@ -322,6 +331,8 @@ those tests,</p>
 <li><a href="https://github.com/opencredo/neo4j-puppet">https://github.com/opencredo/neo4j-puppet</a></li>
 <li><a href="https://github.com/aubricus/vagrant-puppet-boilerplate">https://github.com/aubricus/vagrant-puppet-boilerplate</a></li>
 <li><a href="https://forge.puppetlabs.com/proletaryo/supervisor">https://forge.puppetlabs.com/proletaryo/supervisor</a></li>
+<li><a href="https://github.com/netmanagers/puppet-nginx">https://github.com/netmanagers/puppet-nginx</a></li>
+<li><a href="https://github.com/nesi/puppet-git">https://github.com/nesi/puppet-git</a></li>
 </ul>
 
               </div>
