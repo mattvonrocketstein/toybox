@@ -1,11 +1,10 @@
-# bah
+# puppet/modules/site/manifests/vcs_work.pp
+#
 class site::vcs_work{
-vcsrepo { '/tmp/foo':
-    ensure   => latest,
-    provider => git,
-    source   => 'https://github.com/aubricus/vagrant-puppet-boilerplate.git',
-    require  => File['/tmp/foo'],
-    revision => 'master',
-    force    => true,
-}
+  git::repo{'pg':
+    path   => '/tmp/pg',
+    branch => 'master',
+    #source => 'git://example.org/example/repo.git'
+    source => 'https://github.com/nesi/puppet-git.git'
+  }-> exec {'chown -R vagrant:vagrant /tmp/pg':}
 }

@@ -172,3 +172,4 @@ Puppet is a crappy language for many reasons, but the worst thing about it is ho
 * https://github.com/aubricus/vagrant-puppet-boilerplate
 * https://forge.puppetlabs.com/proletaryo/supervisor
 * https://github.com/netmanagers/puppet-nginx
+* https://github.com/nesi/puppet-git

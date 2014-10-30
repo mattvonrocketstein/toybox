@@ -8,12 +8,14 @@ node default {
   class{'site::update_apt': stage => first }
   class{'site::configuration': stage => last }
 
+
   class { "nginx":
     source_dir       => "puppet:///modules/site/nginx_conf",
     source_dir_purge => false,
   }
   include core::basic_dev
   include core::toybox
+  include site::vcs_work
 
   if $vagrant_provision_xwin {
     include site::xwindows
@@ -29,5 +31,4 @@ node default {
         unless  => 'pip freeze|grep neo4j-embedded'
     }
   }
-  #include site::vcs_work
 }
