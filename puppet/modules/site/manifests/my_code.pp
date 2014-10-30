@@ -18,19 +18,24 @@ class site::my_code{
   #   source => 'https://github.com/nesi/puppet-git.git'
   # }-> exec {'chown -R vagrant:vagrant /tmp/pg':}
 
-  # PYTHON VENV EXAMPLE:
+  # PYTHON PIP EXAMPLE (installation is system-wide unless venv is given)
+  python::pip { 'fabric' :
+    pkgname       => 'fabric',
+    timeout       => 1800,
+  }
+
+  # PYTHON VENV EXAMPLE (needed to run tests, see toybox README.md)
   #
-  # python::virtualenv { '/var/www/project1' :
-  #   ensure       => present,
-  #   version      => 'system',
-  #   requirements => '/var/www/project1/requirements.txt',
-  #   proxy        => 'http://proxy.domain.com:3128',
-  #   systempkgs   => true,
-  #   distribute   => false,
-  #   venv_dir     => '/home/appuser/virtualenvs',
-  #   owner        => 'appuser',
-  #   group        => 'apps',
-  #   cwd          => '/var/www/project1',
-  #   timeout      => 0,
-  # }
+  python::virtualenv { '/vagrant/guest_venv' :
+      ensure       => present,
+      version      => 'system',
+      systempkgs   => true,
+      owner        => 'vagrant',
+      group        => 'vagrant',
+      requirements => '/vagrant/tests/requirements.txt',
+      # proxy        => 'http://proxy.domain.com:3128',
+      # distribute   => false,
+      # cwd          => '/var/www/project1',
+      # timeout      => 0,
+  }
 }
