@@ -18,5 +18,4 @@ class core::basic_dev{
     virtualenv => true,
     gunicorn   => false,
   }
-
 }
