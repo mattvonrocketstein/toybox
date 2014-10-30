@@ -1,4 +1,4 @@
-[intro](#intro) | [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox) | [optional stuff](#optional-provisioning) | [testing](#test-from-host) | [quick-links](#quick-links)
+[intro](#intro) | [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox) | [optional stuff](#optional-provisioning) | [tests](#running-tests) | [demos](#running-demos) |[quick-links](#quick-links)
 
 ##Toybox
 
@@ -114,11 +114,11 @@ Setting up the neo4j graph database provisioning is similar, but you will need t
   $ PROVISION_NEO=true vagrant provision
 ```
 
-<a name="test-from-host"/>
-##Advanced Usage: Testing from the host
-By default, the Vagrantfile forwards lots of ports for the services puppet
-is expected to bring up.  During development it can be useful to verify that
-those services are indeed alive.  To bootstrap the testing-setup on the host:
+<a name="running-tests"/>
+##Advanced Usage: Running Tests
+Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the `/vagrant` directory.
+
+By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:
 
 ```shell
   $ virtualenv host_venv
@@ -127,15 +127,25 @@ those services are indeed alive.  To bootstrap the testing-setup on the host:
   $ python tests/test_guest_from_host.py
 ```
 
-##Advanced Usage: Testing from the guest <a name="test-from-layout"/>
-Currently, the only thing testable from the guest is celery/rabbit.  To run
-those tests,
+During normal provisioning, `guest_venv` is setup automatically.  To run tests on the guest from the guest, run this command from the host:
 
 ```shell
-  $ virtualenv guest_venv
-  $ source guest_venv/bin/activate
-  $ pip install -r tests/requirements.txt
-  $ python tests/test_guest_from_guest.py
+  $ vagrant ssh -c /vagrant/guest_venv/bin/python /vagrant/tests/test_guest
+```
+
+<a name="running-demos"/>
+##Advanced Usage: Running Demos
+During default provisioning, databases and message queues and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.
+
+Currently, the only demo is for celery/rabbit.  To run that demo, execute something like this from the guest after using `vagrant ssh`.
+
+```shell
+  $ source /vagrant/guest_venv/bin/activate
+  # send 1000 tasks to add worker, 500 to subtract worker
+  $ python /vagrant/demos/demo_celery.py --add -n 1000
+  $ python /vagrant/demos/demo_celery.py --add -n 500
+  # start a worker to deal with tasks
+  $ python /vagrant/demos/demo_celery.py --worker
 ```
 
 <a name="puppet-layout"/>
