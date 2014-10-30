@@ -15,7 +15,7 @@ node default {
   }
   include core::basic_dev
   include core::toybox
-  include site::vcs_work
+  include site::my_code
 
   if $vagrant_provision_xwin {
     include site::xwindows
