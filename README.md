@@ -93,7 +93,7 @@ If you don't see the _"non-zero exit status"_ message, then it probably succeede
   $ vagrant reload
 ```
 
-After this, your box should be working.  You can connect to it now, or try running the tests mentioned under the "Advanced Usage" section.
+After this, your box should be working.  You can connect to it now, or try [running the tests](#running-tests).
 
 ```shell
    $ vagrant ssh
@@ -135,17 +135,29 @@ During normal provisioning, `guest_venv` is setup automatically.  To run tests o
 
 <a name="running-demos"/>
 ##Advanced Usage: Running Demos
-During default provisioning, databases and message queues and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.
+During default provisioning, databases, message queues, and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.  All demos require you to connect to the guest and source the main guest virtual-environment:
 
-Currently, the only demo is for celery/rabbit.  To run that demo, execute something like this from the guest after using `vagrant ssh`.
 
 ```shell
-  $ source /vagrant/guest_venv/bin/activate
-  # send 1000 tasks to add worker, 500 to subtract worker
+  $ vagrant ssh # connect to guest
+  $ source /vagrant/guest_venv/bin/activate # run this from guest
+```
+
+To run the celery/rabbit demo follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local [flower](http://admin:admin@localhost:5555) and [rabbitmq](http://admin:admin@localhost:15672) servers.
+
+```shell
+  # send 1000 and 500 tasks to add and subtract worker, respectively
   $ python /vagrant/demos/demo_celery.py --add -n 1000
   $ python /vagrant/demos/demo_celery.py --add -n 500
   # start a worker to deal with tasks
   $ python /vagrant/demos/demo_celery.py --worker
+```
+
+To run the MongoDB demo follow the instructions below.  You can confirm the operations by checking [your local genghisapp](http://admin:admin@localhost:5556) afterwards.
+
+```shell
+  # create 50 fake users 
+  $ python /vagrant/demos/demo_mongo.py --records 50
 ```
 
 <a name="puppet-layout"/>
