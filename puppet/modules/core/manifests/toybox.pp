@@ -25,25 +25,32 @@ class core::toybox{
   package{'celeryd':
     ensure => installed,
   }
-  exec { 'sudo /usr/bin/pip install flower==0.7.3':
-    require => [
-      Package['celeryd'],
-      Package['python-pip'],
-      Package['python-dev'],
-      Package['python2.7']],
-    unless  => 'pip freeze | grep "flower==0.7.3"'
+  python::pip { 'flower==0.7.3' :
+    pkgname       => 'flower==0.7.3',
+    timeout       => 1800,
   }
+  #exec { 'sudo /usr/bin/pip install flower==0.7.3':
+  #  require => [
+  #    Package['celeryd'],
+  #    Package['python-pip'],],
+  #  unless  => 'pip freeze | grep "flower==0.7.3"'
+  #}
 
   # fix a bug where ubuntu installs an older version, or
   # celery will segfault into an otherwise silent error
-  exec { 'sudo /usr/bin/pip install librabbitmq==1.5.2':
+  python::pip {'librabbitmq==1.5.2':
+    pkgname => "librabbitmq==1.5.2",
+    timeout => 1800,
     require => [
       Package['celeryd'],
-      Package['python-pip'],
-      Package['python-dev'],
-      Package['python2.7']],
-    unless  => 'pip freeze | grep "librabbitmq==1.5.2"'
+      Package['python-pip']],
   }
+  #exec { 'sudo /usr/bin/pip install librabbitmq==1.5.2':
+  #  require => [
+  #    Package['celeryd'],
+  #    Package['python-pip']],
+  #  unless  => 'pip freeze | grep "librabbitmq==1.5.2"'
+  #}
 
   exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
