@@ -1,0 +1,5 @@
+# demos/requirements.txt
+#
+#
+mongoengine==0.8.7
+faker==0.0.4

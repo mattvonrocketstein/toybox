@@ -1,4 +1,15 @@
-"""
+#!/usr/bin/env python
+""" toybox demo for celery
+    Example usage follows:
+
+      # send 100 messages to subtract task
+      $ demo_celery.py -n 100 --subtract
+
+      # send 200 messages to add task
+      demo_celery.py -n 100 --subtract
+
+      # start the worker which answers add/subtract tasks
+      demo_celery.py --worker
 """
 import argparse
 import sys, random
