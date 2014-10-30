@@ -24,18 +24,30 @@ class site::my_code{
     timeout       => 1800,
   }
 
-  # PYTHON VENV EXAMPLE (needed to run tests, see toybox README.md)
-  #
+  # PYTHON VENV/REQS EXAMPLE
+  # this is needed to run tests and demos.
+  # see toybox README.md
   python::virtualenv { '/vagrant/guest_venv' :
       ensure       => present,
       version      => 'system',
       systempkgs   => true,
       owner        => 'vagrant',
       group        => 'vagrant',
-      requirements => '/vagrant/tests/requirements.txt',
       # proxy        => 'http://proxy.domain.com:3128',
       # distribute   => false,
       # cwd          => '/var/www/project1',
       # timeout      => 0,
+  }
+  python::requirements { 'test requirements' :
+    virtualenv => '/vagrant/guest_venv',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/tests/requirements.txt',
+  }
+  python::requirements { 'demo requirements' :
+    virtualenv => '/vagrant/guest_venv',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/demos/requirements.txt',
   }
 }
