@@ -6,10 +6,10 @@ class core::toybox{
     ensure => installed,
   }
 
-  mongodb_database { testdb:
-    ensure   => present,
-    tries    => 10,
-    require  => Package['mongodb']
+  mongodb_database { 'testdb':
+    ensure  => present,
+    tries   => 10,
+    require => Package['mongodb']
   }
 
   class { 'rabbitmq':
