@@ -1,5 +1,8 @@
 # demos/requirements.txt
 #
 #
+fabric==1.10.0
 mongoengine==0.8.7
 faker==0.0.4
+bulbs==0.3.29
+#py2neo==1.6.4
