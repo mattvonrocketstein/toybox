@@ -3,6 +3,6 @@ server {
     server_name     localhost;
 
     location / {
-        root /vagrant;
+        root /opt/www;
     }
 }

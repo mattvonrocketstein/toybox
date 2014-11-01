@@ -20,6 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   9001:  this entry is for the supervisor WUI
   #   7474:  this entry is for the neo4j data/WUI
   config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 8080, host: 8081
   config.vm.network "forwarded_port", guest: 15672, host: 15672
   config.vm.network "forwarded_port", guest: 5555, host: 5555
   config.vm.network "forwarded_port", guest: 5556, host: 5556
@@ -31,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Use VBoxManage to customize the VM. For example to change memory:
   # vb.customize ["modifyvm", :id, "--memory", "1024"]
   config.vm.provider "virtualbox" do |vb|
-    vb.gui = false       # toggle on/off for headless mode
+    vb.gui = true #false       # toggle on/off for headless mode
     vb.name = DEFAULT_NAME
     vb.customize ["modifyvm", :id, "--vram", "32"]
     vb.customize ["modifyvm", :id, "--memory", "1024"]
