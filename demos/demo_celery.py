@@ -14,16 +14,26 @@
 import argparse
 import sys, random
 from celery import Celery, Task
+from kombu import Exchange, Queue
 
-class Config: pass
+class Config:
+    default_exchange = Exchange('default', type='direct')
+    CELERY_QUEUES = (
+        Queue('default', default_exchange, routing_key='default'),
+        Queue('demo', default_exchange, routing_key='demo.#'),
+        )
+    CELERY_DEFAULT_QUEUE = 'default'
+    CELERY_DEFAULT_EXCHANGE = 'default'
+    CELERY_DEFAULT_ROUTING_KEY = 'default'
 
-app = Celery('tasks')
+app = Celery('demo')
 app.config_from_object(Config)
+
 
 
 class TracingTask(Task):
     abstract = True
-
+    queue = 'demo'
     def after_return(self, *args, **kwargs):
         print 'Task returned: {0!r}'.format(self.request)
 
