@@ -2,7 +2,9 @@
 """ toybox.scripts.render_index
 
     this takes the main toybox/README.md file and creates
-    toybox/index.html in a way that's github compatable.
+    index.html in a way that's github compatable.  index.html
+    will be placed into the repo such that puppet can provision
+    it to the guest in the /opt/www directory.
 
     NOTE: the first time you run this script, grip has
     to cache a bunch of resources and it takes a long

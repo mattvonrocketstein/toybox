@@ -14,11 +14,11 @@ node default {
     source_dir_purge => false,
   }
   file { '/opt/www':
-    path         => '/opt/www',
-    ensure       => directory,
-    require      => File['/etc/nginx/nginx.conf'],
-    source       => 'puppet:///modules/site/www',
-    recurse      => true,
+    path    => '/opt/www',
+    ensure  => directory,
+    require => File['/etc/nginx/nginx.conf'],
+    source  => 'puppet:///modules/site/www',
+    recurse => true,
 
   }
   include core::basic_dev
