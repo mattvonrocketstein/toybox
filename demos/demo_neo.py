@@ -2,13 +2,16 @@
 """ toybox demo for neo4j
     Example usage follows:
 
-        # download some_dataset from neo4j example data server,
+
+        # no arguments loads the default datset "cieasts_12k_movies_50k"
+        $ demo_neo.py
+
+        # download specific named dataset from neo4j example data server,
         # then install it to our server.
         $ demo_neo.py --dataset=some_dataset.zip
 
-        # load default datset "cieasts_12k_movies_50k"
-        $ demo_neo.py
-
+        # reset database completely
+        $ demo_neo.py --wipe
 """
 import os
 import argparse
@@ -19,6 +22,7 @@ from fabric.colors import red
 DEFAULT_DATASET = 'cineasts_12k_movies_50k_actors.zip'
 NEO_DATA_DIR = '/opt/neo4j/neo4j-community-1.7.2/data/'
 DATASET_URL_T = 'http://example-data.neo4j.org/files/{0}'
+GRAPH_DB_DIR = os.path.join(NEO_DATA_DIR, 'graph.db')
 
 def _report(msg):
     print red(msg)
@@ -47,28 +51,40 @@ def main(_CINE_FILE):
                 break
             else:
                 count+=1
-        graph_db_dir = os.path.join(NEO_DATA_DIR, 'graph.db')
+
         cmd = 'sudo mv {0} {1}'.format(
             graph_db_dir, backup)
         local(cmd)
-        cmd = 'sudo mv /vagrant/graph.db {0}'.format(graph_db_dir)
+        cmd = 'sudo mv /vagrant/graph.db {0}'.format(GRAPH_DB_DIR)
         local(cmd)
-        local('sudo chown -R neo4j:neo4j {0}'.format(graph_db_dir))
+        local('sudo chown -R neo4j:neo4j {0}'.format(GRAPH_DB_DIR))
         local('sudo chown -R neo4j:neo4j {0}'.format(backup))
-        _report("finished copying dataset.  restarting neo")
-        local('sudo /etc/init.d/neo4j-service restart')
+        _report("finished copying dataset.")
+        _restart_neo()
     msg = "finished installing dataset.  view it at the url below"
     _report(msg)
     _report("http://localhost:7474/webadmin/#/data/search/0/")
 
+def wipedb():
+    local('sudo rm -rf {0}'.format(
+        GRAPH_DB_DIR))
+    _restart_neo()
+
+def _restart_neo():
+    _report("restarting neo")
+    local('sudo /etc/init.d/neo4j-service restart')
 
 def build_parser():
     parser = argparse.ArgumentParser(conflict_handler='resolve')
     parser.add_argument('-d', '--dataset', default=DEFAULT_DATASET)
+    parser.add_argument('--wipedb', action='store_true')
     return parser
 
 if __name__ == '__main__':
     parser = build_parser()
     args = parser.parse_args()
-    main(args.dataset)
+    if args.wipedb:
+        wipedb()
+    else:
+        main(args.dataset)
     #from IPython import Shell; Shell.IPShellEmbed(argv=['-noconfirm_exit'])()
