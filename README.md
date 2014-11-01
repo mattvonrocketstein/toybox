@@ -1,4 +1,4 @@
-[intro](#intro) | [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox) | [optional stuff](#optional-provisioning) | [tests](#running-tests) | [demos](#running-demos) |[quick-links](#quick-links)
+[requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox) | [optional stuff](#optional-provisioning) | [tests](#running-tests) | [demos](#running-demos) |[quick-links](#quick-links)
 
 ##Toybox
 
@@ -22,7 +22,7 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
 <a name="toybox"/>
 ##Other toys in the toybox
 * [mongodb](http://www.mongodb.org): a popular nosql database
-    * default port @ ??
+    * default port @ 27017
     * mongo version is 2.4.9
     * started by default on system boot
     * [genghisapp](http://genghisapp.com): a data viz tool for mongo
@@ -143,7 +143,7 @@ During default provisioning, databases, message queues, and visualization aids a
   $ source /vagrant/guest_venv/bin/activate # run this from guest
 ```
 
-To run the celery/rabbit demo follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local [flower](http://admin:admin@localhost:5555) and [rabbitmq](http://admin:admin@localhost:15672) servers.
+To run the **celery/rabbit demo** follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local [flower](http://admin:admin@localhost:5555) and [rabbitmq](http://admin:admin@localhost:15672) servers.
 
 ```shell
   # send 1000 and 500 tasks to add and subtract worker, respectively
@@ -153,11 +153,19 @@ To run the celery/rabbit demo follows the instructions below.  You can confirm t
   $ python /vagrant/demos/demo_celery.py --worker
 ```
 
-To run the MongoDB demo follow the instructions below.  You can confirm the operations by checking [your local genghisapp](http://admin:admin@localhost:5556) afterwards.
+To run the **MongoDB demo** follow the instructions below.  You can confirm the operations by checking [your local genghisapp](http://admin:admin@localhost:5556) afterwards.
 
 ```shell
-  # create 50 fake users 
+  # create 50 fake users
   $ python /vagrant/demos/demo_mongo.py --records 50
+```
+
+To run the **Neo4j demo** follow the instructions below and the example movies database will be loaded.  Later, you can flush the database by using the `--wipedb` argument to the same script.  See the script code for other usage instructions.  After loading a dataset, visit [your local neo server](http://localhost:7474/webadmin/#/data/search/0/).
+
+
+```shell
+  # load default datset "cieasts_12k_movies_50k"
+  $ python /vagrant/demos/demo_neo.py
 ```
 
 <a name="puppet-layout"/>
@@ -185,6 +193,8 @@ This markdown file is rendered to html and used as the default landing page for 
 <a name="todo"/>
 ##TODO:
 * Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)
+* optional install for gephi using [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
+* elasticsearch?
 
 <a name="credits"/>
 ##Credits:

@@ -43,7 +43,7 @@
                 </h3>
               
               <div class="markdown-body entry-content">
-                <p><a href="#intro">intro</a> | <a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a> | <a href="#optional-provisioning">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> |<a href="#quick-links">quick-links</a></p>
+                <p><a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a> | <a href="#optional-provisioning">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> |<a href="#quick-links">quick-links</a></p>
 
 <h2>
 <a name="user-content-toybox" class="anchor" href="#toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toybox</h2>
@@ -86,7 +86,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 <a href="http://www.mongodb.org">mongodb</a>: a popular nosql database
 
 <ul>
-<li>default port @ ??</li>
+<li>default port @ 27017</li>
 <li>mongo version is 2.4.9</li>
 <li>started by default on system boot</li>
 <li>
@@ -254,7 +254,7 @@ Toybox is a template that builds an awesome development environment for virtualb
   <span class="nv">$ </span><span class="nb">source</span> /vagrant/guest_venv/bin/activate <span class="c"># run this from guest</span>
 </pre></div>
 
-<p>To run the celery/rabbit demo follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local <a href="http://admin:admin@localhost:5555">flower</a> and <a href="http://admin:admin@localhost:15672">rabbitmq</a> servers.</p>
+<p>To run the <strong>celery/rabbit demo</strong> follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local <a href="http://admin:admin@localhost:5555">flower</a> and <a href="http://admin:admin@localhost:15672">rabbitmq</a> servers.</p>
 
 <div class="highlight highlight-shell"><pre>  <span class="c"># send 1000 and 500 tasks to add and subtract worker, respectively</span>
   <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --add -n 1000
@@ -263,10 +263,16 @@ Toybox is a template that builds an awesome development environment for virtualb
   <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --worker
 </pre></div>
 
-<p>To run the MongoDB demo follow the instructions below.  You can confirm the operations by checking <a href="http://admin:admin@localhost:5556">your local genghisapp</a> afterwards.</p>
+<p>To run the <strong>MongoDB demo</strong> follow the instructions below.  You can confirm the operations by checking <a href="http://admin:admin@localhost:5556">your local genghisapp</a> afterwards.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="c"># create 50 fake users </span>
+<div class="highlight highlight-shell"><pre>  <span class="c"># create 50 fake users</span>
   <span class="nv">$ </span>python /vagrant/demos/demo_mongo.py --records 50
+</pre></div>
+
+<p>To run the <strong>Neo4j demo</strong> follow the instructions below and the example movies database will be loaded.  Later, you can flush the database by using the <code>--wipedb</code> argument to the same script.  See the script code for other usage instructions.  After loading a dataset, visit <a href="http://localhost:7474/webadmin/#/data/search/0/">your local neo server</a>.</p>
+
+<div class="highlight highlight-shell"><pre>  <span class="c"># load default datset "cieasts_12k_movies_50k"</span>
+  <span class="nv">$ </span>python /vagrant/demos/demo_neo.py
 </pre></div>
 
 <p><a name="user-content-puppet-layout" aria-hidden="true"></a></p>
@@ -327,6 +333,9 @@ Toybox is a template that builds an awesome development environment for virtualb
 <ul>
 <li>Experimentation with the <a href="https://github.com/mitchellh/vagrant-aws">AWS provider</a>
 </li>
+<li>optional install for gephi using <a href="https://gist.github.com/dcht00/432caaf3e6c50a2202b8">these instructions</a>
+</li>
+<li>elasticsearch?</li>
 </ul>
 
 <p><a name="user-content-credits" aria-hidden="true"></a></p>
