@@ -21,6 +21,10 @@ node default {
     recurse => true,
 
   }
+  file { '/etc/motd':
+    ensure => file,
+    content => template('site/motd.erb'),
+  }
   include core::basic_dev
   include core::toybox
   include site::my_code
