@@ -124,13 +124,13 @@ By default, the Vagrantfile forwards lots of ports for the services puppet is ex
   $ virtualenv host_venv
   $ source host_venv/bin/activate
   $ pip install -r tests/requirements.txt
-  $ python tests/test_guest_from_host.py
+  $ python tests/test_guest.py
 ```
 
 During normal provisioning, `guest_venv` is setup automatically.  To run tests on the guest from the guest, run this command from the host:
 
 ```shell
-  $ vagrant ssh -c /vagrant/guest_venv/bin/python /vagrant/tests/test_guest
+  $ vagrant ssh -c "/vagrant/guest_venv/bin/python /vagrant/tests/test_guest.py"
 ```
 
 <a name="running-demos"/>
@@ -153,15 +153,14 @@ To run the **celery/rabbit demo** follows the instructions below.  You can confi
   $ python /vagrant/demos/demo_celery.py --worker
 ```
 
-To run the **MongoDB demo** follow the instructions below.  You can confirm the operations by checking [your local genghisapp](http://admin:admin@localhost:5556) afterwards.
+To run the **MongoDB demo** follow the instructions below.  You can confirm the operations by checking [your local genghisapp](http://admin:admin@localhost:5556), specifically the [user collection](http://localhost:5556/servers/localhost/databases/testdb/collections/user).
 
 ```shell
   # create 50 fake users
   $ python /vagrant/demos/demo_mongo.py --records 50
 ```
 
-To run the **Neo4j demo** follow the instructions below and the example movies database will be loaded.  Later, you can flush the database by using the `--wipedb` argument to the same script.  See the script code for other usage instructions.  After loading a dataset, visit [your local neo server](http://localhost:7474/webadmin/#/data/search/0/).
-
+To run the **Neo4j demo** follow the instructions below. First if it's not present on the guest in the /vagrant directory, the example movies database will be downloaded and afterwards it will be loaded into your neo server.  After loading a dataset, visit [your local neo server](http://localhost:7474/webadmin/#/data/search/0/).  If you want to start over, you can flush the database by using the `--wipedb` argument to the `demo_neo.py` script.  See the script code for other usage instructions.
 
 ```shell
   # load default datset "cieasts_12k_movies_50k"

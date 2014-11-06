@@ -39,7 +39,7 @@ def main(_CINE_FILE):
         _report("dataset is already downloaded: {0}".format(local_dataset))
     with lcd('/vagrant'):
         _report("decompressing dataset..")
-        local('unzip {0} -d graph.db'.format(_CINE_FILE))
+        local('unzip -o {0} -d graph.db'.format(_CINE_FILE))
         backup_dir = 'graph.db.old'
         count = 1
         while True:
@@ -53,7 +53,7 @@ def main(_CINE_FILE):
                 count+=1
 
         cmd = 'sudo mv {0} {1}'.format(
-            graph_db_dir, backup)
+            GRAPH_DB_DIR, backup)
         local(cmd)
         cmd = 'sudo mv /vagrant/graph.db {0}'.format(GRAPH_DB_DIR)
         local(cmd)
