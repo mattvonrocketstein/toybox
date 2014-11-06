@@ -105,7 +105,7 @@ After this, your box should be working.  You can connect to it now, or try [runn
 ##Advanced Usage: Optional Provisioning
 The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.
 
-####Advanced Usage: Provisioning XWindows
+####Provisioning XWindows
 
 If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin [vbguest plugin](https://github.com/dotless-de/vagrant-vbguest).  (*Note: Unfortunately even then getting full-screen resolution to work may still take some extra fiddling, the situation seems to change slightly with every minor-version release of guest-extensions/virtualbox.)* If you want to change the window manager or other details of this aspect of provisioning, fork this repo and edit `toybox/puppet/modules/site/manifests/xwindows.pp`.  **To enable provisioning for xwindows, run**:
 
@@ -114,7 +114,7 @@ If you wish to use the optional xwindows setup, I strongly suggest installing th
 ```
 
 <a name="optional-provisioning-neo"/>
-####Advanced Usage: Provisioning Neo
+####Provisioning Neo
 
 Provisioning neo is similar to provisioning XWindows, but you will need to download their distribution tarball first.  Note: before you start the download, make sure that you're still in the same directory as this README and the Vagrantfile.
 
