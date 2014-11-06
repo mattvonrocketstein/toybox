@@ -1,6 +1,6 @@
 [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox)
 
-[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [quick-links](#quick-links) | [todo](#todo) | [credits](#credits) |
+[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [quick-links](#quick-links) | [todo](#todo) | [credits](#credits)
 
 ##Toybox
 
@@ -175,15 +175,23 @@ To run the **Neo4j demo** you must already have done some of the [optional provi
   # load default datset "cieasts_12k_movies_50k"
   $ python /vagrant/demos/demo_neo.py
 ```
+<a name="implementation"/>
 ##Implementation Remarks
-This section documents a few things that might be useful to people forking this recipe.
+This section documents a few things that might be useful to people forking this recipe.  If you need toybox to execute additional git-clones, create or provision python virtualenvironments, etc, the examples in **[1]** will be useful.  To modify the nginx setup, start in **[2]**.  To execute additional configuration in the very last step of provisioning, see **[3]**.  To change the window-manager or other applications installed in provisioning xwindows, see **[4]**.  For examples of daemonizing random processes, check out the supervisorctl section in **[5]**.  As a place to add default additional system packages, **[6]** is the suggested spot.
+
+1. `puppet/modules/site/manifests/my_code.pp`
+2. `puppet/modules/site/files/nginx_conf/sites-enabled/default`
+3. `puppet/modules/site/manifests/configuration.pp`
+4. `puppet/modules/site/manifests/xwindows.pp`
+5. `puppet/modules/core/manifests/toybox.pp`
+6. `puppet/modules/core/manifests/basic_dev.pp`
 
 <a name="puppet-idempotency"/>
-####Implementation Remarks: Idempotency
+####Pattern Idempotency
 Much effort has gone into making toybox as friendly as possible for low-bandwidth situations.  During repeated calls to `vagrant provision`, every effort has been made to avoid unnecessary duplication of effort for expensive network operations like `apt-get update`, `git clone`, and `pip install`.  However, relevant changes to configuration that involve new packages or changes to template files, etc, should always be honored.  Please file an issue on github if you find problems.
 
 <a name="puppet-layout"/>
-####Implementation Remarks: The Puppet Layout
+####Puppet File Layout
 * Entry-point is `puppet/default.pp` (as named in the Vagrantfile)
     * This is probably your starting place for fork-and-mod hacks
 * The `puppet` directory has two subdirs, namely `core` and `site`
@@ -206,8 +214,8 @@ This markdown file is rendered to html and used as the default landing page for 
 
 <a name="todo"/>
 ##TODO:
-* Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)
-* optional install for gephi using [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
+* Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)?
+* optional install for gephi (a graphdb browser)? use [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
 * elasticsearch?
 
 <a name="credits"/>
