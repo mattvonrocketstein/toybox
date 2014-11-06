@@ -1,16 +1,18 @@
-[requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox) | [optional stuff](#optional-provisioning) | [tests](#running-tests) | [demos](#running-demos) |[quick-links](#quick-links)
+[requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox)
+
+[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [quick-links](#quick-links) | [todo](#todo) | [credits](#credits) |
 
 ##Toybox
 
 <a name="intro"/>
-Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other custom automation.
+Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other kinds of custom automation.  Toybox includes demos and integration tests for the server that is created, and the tests can be run from either the guest or host OS.
 
 <a name="requirements"/>
 ##Build target/reference versions:
 
 Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that currently only some random subset of the toys will work with redhat/centos.  At least across recent Ubuntu versions, the puppet code is probably _(possibly? maybe? hopefully??)_ fairly generic.
 
-A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Usage" section).  If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin [vbguest plugin](https://github.com/dotless-de/vagrant-vbguest).  Download vagrant [here](http://www.vagrantup.com/downloads.html), download virtualbox [here](https://www.virtualbox.org/wiki/Downloads).
+A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Usage" section).  Download vagrant [here](http://www.vagrantup.com/downloads.html), download virtualbox [here](https://www.virtualbox.org/wiki/Downloads).
 
 <a name="batteries"/>
 ##Basic batteries are included:
@@ -99,15 +101,22 @@ After this, your box should be working.  You can connect to it now, or try [runn
    $ vagrant ssh
 ```
 
-<a name="optional-provisioning"/>
-##Advanced Usage: Provisioning with the optional stuff
-The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.  To install the xwindows stuff, run:
+<a name="optional-provisioning-xwin"/>
+##Advanced Usage: Optional Provisioning
+The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.
+
+####Advanced Usage: Provisioning XWindows
+
+If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin [vbguest plugin](https://github.com/dotless-de/vagrant-vbguest).  (*Note: Unfortunately even then getting full-screen resolution to work may still take some extra fiddling, the situation seems to change slightly with every minor-version release of guest-extensions/virtualbox.)* If you want to change the window manager or other details of this aspect of provisioning, fork this repo and edit `toybox/puppet/modules/site/manifests/xwindows.pp`.  **To enable provisioning for xwindows, run**:
 
 ```shell
   $ PROVISION_XWIN=true vagrant provision
 ```
 
-Setting up the neo4j graph database provisioning is similar, but you will need to download their distribution tarball first.  Note: before you start the download, make sure that you're still in the same directory as this README and the Vagrantfile.
+<a name="optional-provisioning-neo"/>
+####Advanced Usage: Provisioning Neo
+
+Provisioning neo is similar to provisioning XWindows, but you will need to download their distribution tarball first.  Note: before you start the download, make sure that you're still in the same directory as this README and the Vagrantfile.
 
 ```shell
   $ wget http://dist.neo4j.org/neo4j-community-1.7.2-unix.tar.gz
@@ -160,15 +169,21 @@ To run the **MongoDB demo** follow the instructions below.  You can confirm the 
   $ python /vagrant/demos/demo_mongo.py --records 50
 ```
 
-To run the **Neo4j demo** follow the instructions below. First if it's not present on the guest in the /vagrant directory, the example movies database will be downloaded and afterwards it will be loaded into your neo server.  After loading a dataset, visit [your local neo server](http://localhost:7474/webadmin/#/data/search/0/).  If you want to start over, you can flush the database by using the `--wipedb` argument to the `demo_neo.py` script.  See the script code for other usage instructions.
+To run the **Neo4j demo** you must already have done some of the [optional provisioning](#optional-provisioning), and then you can follow the instructions below. If it's not present on the guest in the /vagrant directory, the example movies database will be downloaded and afterwards it will be loaded into your neo server.  After loading a dataset, visit [your local neo server](http://localhost:7474/webadmin/#/data/search/0/).  If you want to start over, you can flush the database by using the `--wipedb` argument to the `demo_neo.py` script.  See the script code for other usage instructions.
 
 ```shell
   # load default datset "cieasts_12k_movies_50k"
   $ python /vagrant/demos/demo_neo.py
 ```
+##Implementation Remarks
+This section documents a few things that might be useful to people forking this recipe.
+
+<a name="puppet-idempotency"/>
+####Implementation Remarks: Idempotency
+Much effort has gone into making toybox as friendly as possible for low-bandwidth situations.  During repeated calls to `vagrant provision`, every effort has been made to avoid unnecessary duplication of effort for expensive network operations like `apt-get update`, `git clone`, and `pip install`.  However, relevant changes to configuration that involve new packages or changes to template files, etc, should always be honored.  Please file an issue on github if you find problems.
 
 <a name="puppet-layout"/>
-##Implementation Remarks: The Puppet Layout
+####Implementation Remarks: The Puppet Layout
 * Entry-point is `puppet/default.pp` (as named in the Vagrantfile)
     * This is probably your starting place for fork-and-mod hacks
 * The `puppet` directory has two subdirs, namely `core` and `site`
