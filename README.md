@@ -124,7 +124,7 @@ Provisioning neo is similar to provisioning XWindows, but you will need to downl
 ```
 
 <a name="running-tests"/>
-##Advanced Usage: Running Tests
+##Running Tests
 Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the `/vagrant` directory.
 
 By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:
@@ -143,7 +143,7 @@ During normal provisioning, `guest_venv` is setup automatically.  To run tests o
 ```
 
 <a name="running-demos"/>
-##Advanced Usage: Running Demos
+##Running Demos
 During default provisioning, databases, message queues, and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.  All demos require you to connect to the guest and source the main guest virtual-environment:
 
 
