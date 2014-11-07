@@ -1,6 +1,6 @@
 [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox)
 
-[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [quick-links](#quick-links) | [todo](#todo) | [credits](#credits)
+[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [contributing](#contributing) | [quick-links](#quick-links) | [todo](#todo) | [credits](#credits)
 
 ##Toybox
 
@@ -201,6 +201,10 @@ Much effort has gone into making toybox as friendly as possible for low-bandwidt
     * Stages are used to guarantee aspects of the run-order
         * see [puppet language guide](http://docs.puppetlabs.com/guides/language_guide.html) and the section "Run Stages"
 
+<a name="contributing"/>
+##Contributing:
+
+
 <a name="credits"/>
 ##Quick links:
 This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
@@ -217,6 +221,7 @@ This markdown file is rendered to html and used as the default landing page for 
 * Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)?
 * optional install for gephi (a graphdb browser)? use [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
 * elasticsearch?
+* zookeeper?
 
 <a name="credits"/>
 ##Credits:
