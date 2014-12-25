@@ -5,7 +5,7 @@
 ##Toybox
 
 <a name="intro"/>
-Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other kinds of custom automation.  Toybox includes demos and integration tests for the server that is created, and the tests can be run from either the guest or host OS.
+Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other kinds of custom automation.  Toybox includes demos and integration tests for the infrastructure that is bootstrapped, and the tests can be run from either the guest or host OS.
 
 <a name="requirements"/>
 ##Build target/reference versions:
@@ -204,6 +204,7 @@ Much effort has gone into making toybox as friendly as possible for low-bandwidt
 <a name="contributing"/>
 ##Contributing:
 
+Issues can be raised on [the bugtracker](https://github.com/mattvonrocketstein/toybox/issues) and pull requests are always welcome.
 
 <a name="credits"/>
 ##Quick links:
@@ -225,7 +226,7 @@ This markdown file is rendered to html and used as the default landing page for 
 
 <a name="credits"/>
 ##Credits:
-Puppet is a crappy language for many reasons, but the worst thing about it is how difficult it is to reuse other code without forking.  Apart from puppet forge standard libraries included in this repo, I have benefited from the work mentioned below:
+Puppet can sometimes make it pretty difficult it is to reuse other code without forking.  Apart from puppet forge standard libraries included in this repo and amongst other things, I have benefited from the work mentioned below:
 
 * https://github.com/opencredo/neo4j-puppet
 * https://github.com/aubricus/vagrant-puppet-boilerplate
