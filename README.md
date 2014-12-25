@@ -220,9 +220,10 @@ This markdown file is rendered to html and used as the default landing page for 
 <a name="todo"/>
 ##TODO:
 * Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)?
-* optional install for gephi (a graphdb browser)? use [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
-* elasticsearch?
-* zookeeper?
+* Optional install for gephi (a graphdb browser)? use [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
+* Elasticsearch?
+* Zookeeper?
+* Logstash or similar?
 
 <a name="credits"/>
 ##Credits:
