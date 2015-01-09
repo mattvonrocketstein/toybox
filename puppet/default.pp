@@ -32,6 +32,8 @@ node default {
   include core::toybox
   include site::my_code
 
+  include 'kibana'
+
   class {
     'kibana3':
       config_es_port     => '9201',

@@ -1,0 +1,78 @@
+{
+  "name": "thejandroman-kibana3",
+  "version": "0.0.4",
+  "author": "thejandroman",
+  "license": "Apache License, Version 2.0",
+  "summary": "Installs and configures kibana3.",
+  "source": "https://github.com/thejandroman/puppet-kibana3",
+  "dependencies": [
+    {
+      "name": "puppetlabs/git",
+      "version_requirement": ">= 0.0.3"
+    },
+    {
+      "name": "puppetlabs/vcsrepo",
+      "version_requirement": ">= 0.2.0"
+    },
+    {
+      "name": "puppetlabs/apache",
+      "version_requirement": ">= 1.0.1"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 3.2.1"
+    }
+  ],
+  "project_page": "https://github.com/thejandroman/puppet-kibana3",
+  "issues_url": "https://github.com/thejandroman/puppet-kibana3/issues",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "12.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ],
+  "description": "The kibana3 puppet module allows one to setup and configure the kibana3 interface to Logstash and ElasticSearch.",
+  "types": [
+
+  ],
+  "checksums": {
+    "CHANGELOG.md": "c37509aa76a593469bc8f4fbaaa84ff0",
+    "Gemfile": "83bcc6da47231921eedca378d30e5a1f",
+    "Gemfile.lock": "12ec9aefdc6554d09a9b2ff88ab55da9",
+    "LICENSE": "b1b1222427797ff2583a958e2f32e9ef",
+    "Modulefile": "b4004733b09d6ac1eee32efb33781e38",
+    "README.md": "e86076b79e6588b41e24958686fb63b1",
+    "Rakefile": "aa153292321ecacdddc7e1af6128d291",
+    "manifests/config.pp": "61ea33cec8d30b5efa320a3e453f7419",
+    "manifests/init.pp": "45ff1b1a8a4c57ba4cd73af3150325af",
+    "manifests/install.pp": "682b06ea006bd5e8f3122dd554a25e2d",
+    "manifests/params.pp": "4e933da10fc30c94a23e8ba3ec68ed72",
+    "manifests/uninstall.pp": "4320faa5da90b8a21e456bbe55a22a37",
+    "spec/acceptance/class_spec.rb": "3dfab094cb384fa5b5551c8a0784f514",
+    "spec/acceptance/nodesets/centos-64-x64.yml": "7ad72bad9087a52f30c6f7d5600b68dd",
+    "spec/acceptance/nodesets/default.yml": "1091bb0897dc8ee94a391ab1d8e45132",
+    "spec/acceptance/nodesets/ubuntu-server-12042-x64.yml": "1091bb0897dc8ee94a391ab1d8e45132",
+    "spec/classes/config_spec.rb": "38f4315310b06ff467cebeb2c24730b6",
+    "spec/classes/coverage_spec.rb": "5b6dfa0dd426aca0ccfae23c0a629f0b",
+    "spec/classes/init_spec.rb": "755436d20ba3ad5e643d561a6de1e22e",
+    "spec/classes/install_spec.rb": "b4df7ba946b0e0790c830746ac96e7fa",
+    "spec/classes/params_spec.rb": "cd4c60ba3d69736c3146475958b1e631",
+    "spec/classes/uninstall_spec.rb": "82718d81e25f874c9f9114f1e7b83efd",
+    "spec/spec_helper.rb": "3ea886dd135e120afa31e0aab12e85b0",
+    "spec/spec_helper_acceptance.rb": "ba59341ce08494a2b91977bc75948fec",
+    "templates/config.js.erb": "74fd6df7467defc5fe2493ee4135a0b2",
+    "tests/init.pp": "5a0f09e3fbda7c532e0b763733bc0094",
+    "vagrant/Puppetfile": "7491a66a3bffdb81ee16cd9567459db2",
+    "vagrant/Vagrantfile": "0a5f4dff24cc3bb0b658de949d85bf7b",
+    "vagrant/default.sh": "7e234256c73fdade33c0f529b25c1e01",
+    "vagrant/manifests/default.pp": "666afb9606e448ab4c8e0c457a0118aa"
+  }
+}
