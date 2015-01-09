@@ -1,22 +1,22 @@
 # default.pp
 #
 node default {
-  Exec { path => "/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin"}
-  stage { first: before => Stage[main] }
-  stage { last: require => Stage[main] }
+  Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin'}
+  stage { 'first': before => Stage[main] }
+  stage { 'last': require => Stage[main] }
 
   class{'site::update_apt': stage => first }
   class{'site::configuration': stage => last }
 
 
-  class { "nginx":
-    source_dir       => "puppet:///modules/site/nginx_conf",
+  class { 'nginx':
+    source_dir       => 'puppet:///modules/site/nginx_conf',
     source_dir_purge => false,
   }
 
   file { '/opt/www':
-    path    => '/opt/www',
     ensure  => directory,
+    path    => '/opt/www',
     require => File['/etc/nginx/nginx.conf'],
     source  => 'puppet:///modules/site/www',
     recurse => true,
@@ -24,24 +24,41 @@ node default {
   }
 
   file { '/etc/motd':
-    ensure => file,
+    ensure  => file,
     content => template('site/motd.erb'),
   }
 
   include core::basic_dev
   include core::toybox
   include site::my_code
-  
+
+  # requires java, which is installed by neo
+  case $operatingsystem {
+    /(Ubuntu|Debian)/: {
+      $jreinstaller = 'default-jre'
+    }
+    /(RedHat|CentOS|Fedora)/: {
+      $jreinstaller = 'java-1.6.0-openjdk'
+    }
+  }
+  package {
+    "${jreinstaller}":
+      ensure  => installed;
+  }
+
+
   class { 'kibana':
     install_destination => '/opt/kibana',
-    elasticsearch_url => "http://localhost:9200",
-    version=>"3.0.1",
+    elasticsearch_url   => "http://localhost:9200",
+    version             => "3.0.1",
   }
+
   class { 'elasticsearch':
-    datadir => '/opt/elasticsearch-data',
+    datadir     => '/opt/elasticsearch-data',
     package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
 
   }
+
   if $vagrant_provision_xwin {
     include site::xwindows
   }
