@@ -52,11 +52,13 @@ node default {
     elasticsearch_url   => "http://localhost:9200",
     version             => "3.0.1",
   }
-
   class { 'elasticsearch':
     datadir     => '/opt/elasticsearch-data',
     package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
 
+  }
+  class { 'logstash':
+    restart_on_change => true
   }
 
   if $vagrant_provision_xwin {
