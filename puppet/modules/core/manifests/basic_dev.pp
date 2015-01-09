@@ -1,9 +1,7 @@
 # puppet/modules/core/manifests/basic_dev.pp
 class core::basic_dev{
 
-  $basic_dev_misc_tools = ['banner', , 'ack-grep', 'mosh', 'tree',
-                           'nmap', 'screen', 'sloccount', 'unzip',
-                           'sshfs']
+  $basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs']
   $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
   $basic_dev_scala_base = ['scala']
   package {$basic_dev_misc_tools:ensure => installed}

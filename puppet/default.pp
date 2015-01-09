@@ -31,16 +31,17 @@ node default {
   include core::basic_dev
   include core::toybox
   include site::my_code
-
-  include 'kibana'
-
-  class {
-    'kibana3':
-      config_es_port     => '9201',
-      config_es_protocol => 'https',
-      config_es_server   => 'es.my.domain',
+  
+  class { 'kibana':
+    install_destination => '/opt/kibana',
+    elasticsearch_url => "http://localhost:9200",
+    version=>"3.0.1",
   }
+  class { 'elasticsearch':
+    datadir => '/opt/elasticsearch-data',
+    package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
 
+  }
   if $vagrant_provision_xwin {
     include site::xwindows
   }
