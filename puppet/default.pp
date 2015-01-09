@@ -57,9 +57,7 @@ node default {
     package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
 
   }
-  class { 'logstash':
-    restart_on_change => true
-  }
+class { 'logstash': }
 
   if $vagrant_provision_xwin {
     include site::xwindows
