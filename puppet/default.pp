@@ -13,6 +13,7 @@ node default {
     source_dir       => "puppet:///modules/site/nginx_conf",
     source_dir_purge => false,
   }
+
   file { '/opt/www':
     path    => '/opt/www',
     ensure  => directory,
@@ -21,13 +22,22 @@ node default {
     recurse => true,
 
   }
+
   file { '/etc/motd':
     ensure => file,
     content => template('site/motd.erb'),
   }
+
   include core::basic_dev
   include core::toybox
   include site::my_code
+
+  class {
+    'kibana3':
+      config_es_port     => '9201',
+      config_es_protocol => 'https',
+      config_es_server   => 'es.my.domain',
+  }
 
   if $vagrant_provision_xwin {
     include site::xwindows
