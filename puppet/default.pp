@@ -57,7 +57,10 @@ node default {
     package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
 
   }
-class { 'logstash': }
+class { "logstash":
+  install             => "source",
+  install_source      => "https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar",
+}
 
   if $vagrant_provision_xwin {
     include site::xwindows
