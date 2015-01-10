@@ -9,6 +9,8 @@ node default {
   class{'site::configuration': stage => last }
 
   class zources:{
+    notify  {"foo":;
+    }
     apt::source { 'lstash':
       #comment           => 'This is the iWeb Debian unstable mirror',
       location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
