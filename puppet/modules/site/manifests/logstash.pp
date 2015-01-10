@@ -1,5 +1,20 @@
 class site::logstash{
 
+    class { 'kibana':
+      install_destination => '/opt/kibana',
+      elasticsearch_url   => "http://localhost:9200",
+      version             => "3.0.1",
+    }
+
+    class { 'elasticsearch':
+      datadir     => '/opt/elasticsearch-data',
+      package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
+    }
+    exec {
+      'ES-at-boot':
+        require => Package['elasticsearch'],
+        command => 'sudo update-rc.d elasticsearch defaults 95 10'
+    }
 
   apt::source { 'lstash':
     #comment           => 'This is the iWeb Debian unstable mirror',
@@ -22,17 +37,4 @@ class site::logstash{
     ensure  => file,
     content => template('site/logstash.conf.erb'),
   }
-
-
 }
-#package { 'logstash=1.4.2-1-2c0f5a1':
-  #    ensure => present,
-  #    install_options => '--force-yes',
-  #    require => Exec['update_apt_for_logstash'],
-  #}
-#class { 'logstash':
-  #  install             => 'source',
-  #  install_source      => 'https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar',
-  #  version => '1.3.3',
-  #  template => 'site/logstash.conf.erb',
-  #}

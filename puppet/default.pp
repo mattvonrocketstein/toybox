@@ -1,9 +1,5 @@
 # default.pp
 #
-#class zources {
-#  notify  {'foo':;
-#  }
-#}
 class jpackage {
   case $operatingsystem {
     /(Ubuntu|Debian)/: {
@@ -18,6 +14,7 @@ class jpackage {
       ensure  => installed;
   }
 }
+
 node default {
   Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin'}
   stage { 'first': before => Stage[main] }
@@ -31,7 +28,6 @@ node default {
     source_dir       => 'puppet:///modules/site/nginx_conf',
     source_dir_purge => false,
   }
-  
   file { '/opt/www':
     ensure  => directory,
     path    => '/opt/www',
@@ -57,22 +53,6 @@ node default {
     include site::my_code
 
     # requires java, which is installed by neo
-
-    class { 'kibana':
-      install_destination => '/opt/kibana',
-      elasticsearch_url   => "http://localhost:9200",
-      version             => "3.0.1",
-    }
-
-    class { 'elasticsearch':
-      datadir     => '/opt/elasticsearch-data',
-      package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
-    }
-    exec {
-      'ES-at-boot':
-        require => Package['elasticsearch'],
-        command => 'sudo update-rc.d elasticsearch defaults 95 10'
-    }
 
     if $vagrant_provision_xwin {
       include site::xwindows
