@@ -27,18 +27,13 @@ node default {
     ensure  => file,
     content => template('site/motd.erb'),
   }
-  file { '/etc/logstash/conf.d/logstash.conf':
-    ensure  => file,
-    content => template('site/logstash.conf.erb'),
-    require => Package['logstash']
-  }
   #service { 'logstash':
   #    ensure    => running,
   #    enable    => true,
   #    subscribe => File['/etc/logstash/conf.d/logstash.conf'],
   #  }
   include core::basic_dev
-  include core::logstash
+  include site::logstash
   include core::toybox
   include site::my_code
 
