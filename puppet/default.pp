@@ -9,7 +9,7 @@ node default {
   class{'site::configuration': stage => last }
 
   class zources {
-    notify  {''foo'':;
+    notify  {'foo':;
     }
     apt::source { 'lstash':
       #comment           => 'This is the iWeb Debian unstable mirror',
