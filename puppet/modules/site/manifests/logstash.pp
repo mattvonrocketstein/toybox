@@ -3,7 +3,7 @@ class site::logstash{
   file { '/etc/logstash/conf.d/logstash.conf':
     ensure  => file,
     content => template('site/logstash.conf.erb'),
-    require => Package['logstash']
+    require => Exec['install_logstash']
   }
   exec { 'update_apt_for_logstash':
     command => '(echo \'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main\' | sudo tee /etc/apt/sources.list.d/logstash.list) && sudo apt-get update',
