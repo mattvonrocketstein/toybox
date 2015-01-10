@@ -1,5 +1,4 @@
 class site::logstash{
-
   file { '/etc/logstash/conf.d/logstash.conf':
     ensure  => file,
     content => template('site/logstash.conf.erb'),
