@@ -17,7 +17,20 @@ class zources {
 
   }
 }
-
+class jpackage {
+  case $operatingsystem {
+    /(Ubuntu|Debian)/: {
+      $jreinstaller = 'default-jre'
+    }
+    /(RedHat|CentOS|Fedora)/: {
+      $jreinstaller = 'java-1.6.0-openjdk'
+    }
+  }
+  package {
+    "${jreinstaller}":
+      ensure  => installed;
+  }
+}
 node default {
   Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin'}
   stage { 'first': before => Stage[main] }
@@ -50,28 +63,13 @@ node default {
     #    subscribe => File['/etc/logstash/conf.d/logstash.conf'],
     #  }
     include zources
+    include jpackage
     include core::basic_dev
     include site::logstash
     include core::toybox
     include site::my_code
 
     # requires java, which is installed by neo
-
-    class {"jpackage":
-      case $operatingsystem {
-        /(Ubuntu|Debian)/: {
-          $jreinstaller = 'default-jre'
-        }
-        /(RedHat|CentOS|Fedora)/: {
-          $jreinstaller = 'java-1.6.0-openjdk'
-        }
-      }
-      package {
-        "${jreinstaller}":
-          ensure  => installed;
-      }
-    }
-
 
     class { 'kibana':
       install_destination => '/opt/kibana',
