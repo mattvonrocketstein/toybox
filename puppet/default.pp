@@ -57,7 +57,7 @@ node default {
       include site::my_code
 
       # requires java, which is installed by neo
-      class {
+      class jpackage{
         case $operatingsystem {
           /(Ubuntu|Debian)/: {
             $jreinstaller = 'default-jre'
