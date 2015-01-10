@@ -23,6 +23,15 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
 
 <a name="toybox"/>
 ##Other toys in the toybox
+* [kibana](http://www.elasticsearch.org): you know, for search
+    * default port @ 9200
+    * version is 1.2.1
+* [logstash](http://www.elasticsearch.org): you know, for search
+    * default port @ 9200
+    * version is 1.2.1
+* [elasticsearch](http://www.elasticsearch.org): you know, for search
+    * default port @ 9200
+    * version is 1.2.1
 * [mongodb](http://www.mongodb.org): a popular nosql database
     * default port @ 27017
     * mongo version is 2.4.9

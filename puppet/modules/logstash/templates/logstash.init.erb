@@ -107,7 +107,7 @@ start () {
 
 stop () {
   # logstash Stop command
-  LOGSTASH_CMD_STOP="cd $LOGSTASH_HOME; kill -15 $(ps -ef | grep java | grep $LOGSTASH_USER | awk '{print $2}' | tr '\n' ' ' | sed -e s/\ $//)"
+  LOGSTASH_CMD_STOP="cd $LOGSTASH_HOME; kill -KILL $(ps -ef | grep java | grep $LOGSTASH_USER | awk '{print $2}' | tr '\n' ' ' | sed -e s/\ $//)"
   if [ -z "$SUBIT" ]; then
     $LOGSTASH_CMD_STOP && rm -f $LOCKFILE $PIDFILE
   else

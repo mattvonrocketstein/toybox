@@ -60,6 +60,9 @@ node default {
 class { "logstash":
   install             => "source",
   install_source      => "https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar",
+  version => '1.3.3',
+  template => "site/logstash.conf.erb",
+
 }
 
   if $vagrant_provision_xwin {
