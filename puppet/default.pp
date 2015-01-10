@@ -1,22 +1,9 @@
 # default.pp
 #
-class zources {
-  notify  {'foo':;
-  }
-  apt::source { 'lstash':
-    #comment           => 'This is the iWeb Debian unstable mirror',
-    location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
-    release           => 'stable',
-    repos             => 'main',
-    #required_packages => 'debian-keyring debian-archive-keyring',
-    #key               => '8B48AD6246925553',
-    #key_server        => 'subkeys.pgp.net',
-    #pin               => '-10',
-    #include_src       => true,
-    #include_deb       => true
-
-  }
-}
+#class zources {
+#  notify  {'foo':;
+#  }
+#}
 class jpackage {
   case $operatingsystem {
     /(Ubuntu|Debian)/: {
@@ -35,7 +22,7 @@ node default {
   Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin'}
   stage { 'first': before => Stage[main] }
   stage { 'last': require => Stage[main] }
-  class { "zources": stage => "first"; }
+  #class { "zources": stage => "first"; }
 
   class{'site::update_apt': stage => first }
   class{'site::configuration': stage => last }
@@ -62,7 +49,7 @@ node default {
     #    enable    => true,
     #    subscribe => File['/etc/logstash/conf.d/logstash.conf'],
     #  }
-    include zources
+    #include zources
     include jpackage
     include core::basic_dev
     include site::logstash
