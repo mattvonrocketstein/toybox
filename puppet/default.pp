@@ -20,7 +20,6 @@ node default {
     require => File['/etc/nginx/nginx.conf'],
     source  => 'puppet:///modules/site/www',
     recurse => true,
-
   }
 
   file { '/etc/motd':
