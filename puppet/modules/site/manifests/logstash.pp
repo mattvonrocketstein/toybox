@@ -9,12 +9,17 @@ class site::logstash{
     class { 'elasticsearch':
       datadir     => '/opt/elasticsearch-data',
       package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
-    }
+    }->
     exec {
       'ES-at-boot':
         require => Package['elasticsearch'],
         command => 'sudo update-rc.d elasticsearch defaults 95 10'
-    }
+    }->
+    exec {
+      'install-kopf':
+        require => Package['elasticsearch'],
+        command => "sudo /usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
+        unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"
 
   apt::source { 'lstash':
     #comment           => 'This is the iWeb Debian unstable mirror',

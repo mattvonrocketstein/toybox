@@ -1,6 +1,6 @@
 [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox)
 
-[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [contributing](#contributing) | [quick-links](#quick-links) | [todo](#todo) | [credits](#credits)
+[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [contributing](#contributing) | [quick-links](#qlinks) | [todo](#todo) | [credits](#credits)
 
 ##Toybox
 
@@ -23,15 +23,18 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
 
 <a name="toybox"/>
 ##Other toys in the toybox
-* [kibana](http://www.elasticsearch.org): you know, for search
-    * default port @ 9200
-    * version is 1.2.1
-* [logstash](http://www.elasticsearch.org): you know, for search
-    * default port @ 9200
-    * version is 1.2.1
-* [elasticsearch](http://www.elasticsearch.org): you know, for search
-    * default port @ 9200
-    * version is 1.2.1
+* ELK stack
+
+    * [kibana](http://www.elasticsearch.org/overview/kibana/): the k in your ELK stack
+        * default port @ 9200
+        * version is 1.2.1
+    * [logstash](http://logstash.net/):
+        * default port @ 9200
+        * version is 1.2.1
+    * [elasticsearch](http://www.elasticsearch.org): you know, for search
+        * default port @ 9200
+        * version is 1.2.1
+        * kopf WUI is installed
 * [mongodb](http://www.mongodb.org): a popular nosql database
     * default port @ 27017
     * mongo version is 2.4.9
@@ -215,10 +218,11 @@ Much effort has gone into making toybox as friendly as possible for low-bandwidt
 
 Issues can be raised on [the bugtracker](https://github.com/mattvonrocketstein/toybox/issues) and pull requests are always welcome.
 
-<a name="credits"/>
+<a name="qlinks"/>
 ##Quick links:
 This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
 
+* [kopf](http://localhost:9200/_plugin/kopf/#!/cluster)
 * [kibana](http://admin:admin@localhost:5557)
 * [genghis](http://admin:admin@localhost:5556)
 * [flower](http://admin:admin@localhost:5555)
@@ -231,9 +235,7 @@ This markdown file is rendered to html and used as the default landing page for 
 ##TODO:
 * Experimentation with the [AWS provider](https://github.com/mitchellh/vagrant-aws)?
 * Optional install for gephi (a graphdb browser)? use [these instructions](https://gist.github.com/dcht00/432caaf3e6c50a2202b8)
-* Elasticsearch?
 * Zookeeper?
-* Logstash or similar?
 
 <a name="credits"/>
 ##Credits:
