@@ -52,17 +52,22 @@ node default {
     elasticsearch_url   => "http://localhost:9200",
     version             => "3.0.1",
   }
+
   class { 'elasticsearch':
     datadir     => '/opt/elasticsearch-data',
     package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
-
   }
+exec {
+  'ES-at-boot':
+    require => Package['elasticsearch'],
+    command => 'sudo update-rc.d elasticsearch defaults 95 10'
+}
+
 class { "logstash":
   install             => "source",
   install_source      => "https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar",
   version => '1.3.3',
   template => "site/logstash.conf.erb",
-
 }
 
   if $vagrant_provision_xwin {
