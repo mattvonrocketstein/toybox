@@ -6,7 +6,7 @@ class site::logstash{
     require => Package['logstash']
   }
   exec { 'update_apt_for_logstash':
-    command => '(echo 'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list) && sudo apt-get update',
+    command => '(echo \'deb http://packages.elasticsearch.org/logstash/1.4/debian stable main\' | sudo tee /etc/apt/sources.list.d/logstash.list) && sudo apt-get update',
     creates => '/etc/apt/sources.list.d/logstash.list'
   }
   exec { 'install_logstash':
