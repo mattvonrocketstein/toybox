@@ -17,8 +17,8 @@ from grip import export
 def main():
     script_dir = os.path.dirname(__file__)
     toybox_dir = os.path.split(script_dir)[0]
-    site_dir = os.path.join(toybox_dir,'puppet','modules','site')
-    www_files = os.path.join(site_dir,'files','www')
+    site_dir = os.path.join(toybox_dir, 'puppet', 'modules', 'site')
+    www_files = os.path.join(site_dir, 'files', 'www')
     readme_f= os.path.join(toybox_dir, 'README.md')
     index_f = os.path.join(www_files, 'index.html')
     assert os.path.exists(readme_f)

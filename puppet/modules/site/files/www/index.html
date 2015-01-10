@@ -43,27 +43,29 @@
                 </h3>
               
               <div class="markdown-body entry-content">
-                <p><a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a> | <a href="#optional-provisioning">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> |<a href="#quick-links">quick-links</a></p>
+                <p><a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a></p>
+
+<p><a href="#optional-provisioning-xwin">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> | <a href="#implementation">implementation remarks</a> | <a href="#contributing">contributing</a> | <a href="#quick-links">quick-links</a> | <a href="#todo">todo</a> | <a href="#credits">credits</a></p>
 
 <h2>
-<a name="user-content-toybox" class="anchor" href="#toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toybox</h2>
+<a id="user-content-toybox" class="anchor" href="#toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toybox</h2>
 
-<p><a name="user-content-intro" aria-hidden="true"></a>
-Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other custom automation.</p>
+<p><a name="user-content-intro"></a>
+Toybox is a template that builds an awesome development environment for virtualbox using vagrant and puppet.  Apart from actually using the toybox as a development playground, this should be usable as pattern boilerplate for other kinds of custom automation.  Toybox includes demos and integration tests for the infrastructure that is bootstrapped, and the tests can be run from either the guest or host OS.</p>
 
-<p><a name="user-content-requirements" aria-hidden="true"></a></p>
+<p><a name="user-content-requirements"></a></p>
 
 <h2>
-<a name="user-content-build-targetreference-versions" class="anchor" href="#build-targetreference-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build target/reference versions:</h2>
+<a id="user-content-build-targetreference-versions" class="anchor" href="#build-targetreference-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build target/reference versions:</h2>
 
 <p>Vagrant 1.6.5 and Virtualbox 4.3.18 on the host with an Ubuntu guest.  Note that currently only some random subset of the toys will work with redhat/centos.  At least across recent Ubuntu versions, the puppet code is probably <em>(possibly? maybe? hopefully??)</em> fairly generic.</p>
 
-<p>A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Usage" section).  If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin <a href="https://github.com/dotless-de/vagrant-vbguest">vbguest plugin</a>.  Download vagrant <a href="http://www.vagrantup.com/downloads.html">here</a>, download virtualbox <a href="https://www.virtualbox.org/wiki/Downloads">here</a>.</p>
+<p>A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Usage" section).  Download vagrant <a href="http://www.vagrantup.com/downloads.html">here</a>, download virtualbox <a href="https://www.virtualbox.org/wiki/Downloads">here</a>.</p>
 
-<p><a name="user-content-batteries" aria-hidden="true"></a></p>
+<p><a name="user-content-batteries"></a></p>
 
 <h2>
-<a name="user-content-basic-batteries-are-included" class="anchor" href="#basic-batteries-are-included" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic batteries are included:</h2>
+<a id="user-content-basic-batteries-are-included" class="anchor" href="#basic-batteries-are-included" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic batteries are included:</h2>
 
 <ul>
 <li>misc: git, ack-grep, nmap, screen, and tree</li>
@@ -76,12 +78,36 @@ Toybox is a template that builds an awesome development environment for virtualb
 </li>
 </ul>
 
-<p><a name="user-content-toybox" aria-hidden="true"></a></p>
+<p><a name="user-content-toybox"></a></p>
 
 <h2>
-<a name="user-content-other-toys-in-the-toybox" class="anchor" href="#other-toys-in-the-toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other toys in the toybox</h2>
+<a id="user-content-other-toys-in-the-toybox" class="anchor" href="#other-toys-in-the-toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other toys in the toybox</h2>
 
 <ul>
+<li>
+<a href="http://www.elasticsearch.org">kibana</a>: you know, for search
+
+<ul>
+<li>default port @ 9200</li>
+<li>version is 1.2.1</li>
+</ul>
+</li>
+<li>
+<a href="http://www.elasticsearch.org">logstash</a>: you know, for search
+
+<ul>
+<li>default port @ 9200</li>
+<li>version is 1.2.1</li>
+</ul>
+</li>
+<li>
+<a href="http://www.elasticsearch.org">elasticsearch</a>: you know, for search
+
+<ul>
+<li>default port @ 9200</li>
+<li>version is 1.2.1</li>
+</ul>
+</li>
 <li>
 <a href="http://www.mongodb.org">mongodb</a>: a popular nosql database
 
@@ -153,7 +179,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 </ul>
 
 <h2>
-<a name="user-content-optional-toys" class="anchor" href="#optional-toys" aria-hidden="true"><span class="octicon octicon-link"></span></a>Optional toys:</h2>
+<a id="user-content-optional-toys" class="anchor" href="#optional-toys" aria-hidden="true"><span class="octicon octicon-link"></span></a>Optional toys:</h2>
 
 <ul>
 <li>
@@ -177,108 +203,129 @@ Toybox is a template that builds an awesome development environment for virtualb
 </li>
 </ul>
 
-<p><a name="user-content-usage" aria-hidden="true"></a></p>
+<p><a name="user-content-usage"></a></p>
 
 <h2>
-<a name="user-content-basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
+<a id="user-content-basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
 
 <p>First we'll need to download a couple of things.  Feel free to skip steps below if you have already cloned this repository, if you already know that you have the right base-box downloaded, or if the vagrant plugin is already installed.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>git clone https://github.com/mattvonrocketstein/toybox.git
-  <span class="nv">$ </span><span class="nb">cd </span>toybox
-  <span class="nv">$ </span>vagrant box add trusty64 https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box
-  <span class="nv">$ </span>vagrant plugin install vagrant-vbguest
-</pre></div>
+<div class="highlight highlight-shell"><pre>  $ git clone https://github.com/mattvonrocketstein/toybox.git
+  $ <span class="pl-s3">cd</span> toybox
+  $ vagrant box add trusty64 https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box
+  $ vagrant plugin install vagrant-vbguest</pre></div>
 
 <p>Now we'll bring the box up and start the provisioning.  This will take a long time while it imports the basebox, bootstraps it, and then runs the provisioning.   Notes:  Subsequent calls like the one below will not by default rerun provisioning.  If vbguest detects a mismatched guest-additions iso, it may take even longer while it corrects this but it is better to fix it ASAP.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>vagrant up
-</pre></div>
+<div class="highlight highlight-shell"><pre>  $ vagrant up</pre></div>
 
 <p>If the command above happens to terminate with a red message <em>"The SSH command responded with a non-zero exit status.  Vagrant assumes that this means the command failed"</em>, it might be caused by some download via apt, gem, or pip which has timed out.  If that's the case, you may want to retry provisioning by executing  <code>vagrant provision</code>.</p>
 
 <p>If you don't see the <em>"non-zero exit status"</em> message, then it probably succeeded.  But just to be sure that puppet hasn't missed starting or restarting a service that it's updated, you should run</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>vagrant reload
-</pre></div>
+<div class="highlight highlight-shell"><pre>  $ vagrant reload</pre></div>
 
 <p>After this, your box should be working.  You can connect to it now, or try <a href="#running-tests">running the tests</a>.</p>
 
-<div class="highlight highlight-shell"><pre>   <span class="nv">$ </span>vagrant ssh
-</pre></div>
+<div class="highlight highlight-shell"><pre>   $ vagrant ssh</pre></div>
 
-<p><a name="user-content-optional-provisioning" aria-hidden="true"></a></p>
-
-<h2>
-<a name="user-content-advanced-usage-provisioning-with-the-optional-stuff" class="anchor" href="#advanced-usage-provisioning-with-the-optional-stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Provisioning with the optional stuff</h2>
-
-<p>The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.  To install the xwindows stuff, run:</p>
-
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ PROVISION_XWIN</span><span class="o">=</span><span class="nb">true </span>vagrant provision
-</pre></div>
-
-<p>Setting up the neo4j graph database provisioning is similar, but you will need to download their distribution tarball first.  Note: before you start the download, make sure that you're still in the same directory as this README and the Vagrantfile.</p>
-
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>wget http://dist.neo4j.org/neo4j-community-1.7.2-unix.tar.gz
-  <span class="nv">$ PROVISION_NEO</span><span class="o">=</span><span class="nb">true </span>vagrant provision
-</pre></div>
-
-<p><a name="user-content-running-tests" aria-hidden="true"></a></p>
+<p><a name="user-content-optional-provisioning-xwin"></a></p>
 
 <h2>
-<a name="user-content-advanced-usage-running-tests" class="anchor" href="#advanced-usage-running-tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Running Tests</h2>
+<a id="user-content-advanced-usage-optional-provisioning" class="anchor" href="#advanced-usage-optional-provisioning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Optional Provisioning</h2>
+
+<p>The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.</p>
+
+<h4>
+<a id="user-content-provisioning-xwindows" class="anchor" href="#provisioning-xwindows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Provisioning XWindows</h4>
+
+<p>If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin <a href="https://github.com/dotless-de/vagrant-vbguest">vbguest plugin</a>.  (<em>Note: Unfortunately even then getting full-screen resolution to work may still take some extra fiddling, the situation seems to change slightly with every minor-version release of guest-extensions/virtualbox.)</em> If you want to change the window manager or other details of this aspect of provisioning, fork this repo and edit <code>toybox/puppet/modules/site/manifests/xwindows.pp</code>.  <strong>To enable provisioning for xwindows, run</strong>:</p>
+
+<div class="highlight highlight-shell"><pre>  $ PROVISION_XWIN=<span class="pl-s3">true</span> vagrant provision</pre></div>
+
+<p><a name="user-content-optional-provisioning-neo"></a></p>
+
+<h4>
+<a id="user-content-provisioning-neo" class="anchor" href="#provisioning-neo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Provisioning Neo</h4>
+
+<p>Provisioning neo is similar to provisioning XWindows, but you will need to download their distribution tarball first.  Note: before you start the download, make sure that you're still in the same directory as this README and the Vagrantfile.</p>
+
+<div class="highlight highlight-shell"><pre>  $ wget http://dist.neo4j.org/neo4j-community-1.7.2-unix.tar.gz
+  $ PROVISION_NEO=<span class="pl-s3">true</span> vagrant provision</pre></div>
+
+<p><a name="user-content-running-tests"></a></p>
+
+<h2>
+<a id="user-content-running-tests" class="anchor" href="#running-tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Tests</h2>
 
 <p>Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the <code>/vagrant</code> directory.</p>
 
 <p>By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>virtualenv host_venv
-  <span class="nv">$ </span><span class="nb">source </span>host_venv/bin/activate
-  <span class="nv">$ </span>pip install -r tests/requirements.txt
-  <span class="nv">$ </span>python tests/test_guest_from_host.py
-</pre></div>
+<div class="highlight highlight-shell"><pre>  $ virtualenv host_venv
+  $ <span class="pl-s3">source</span> host_venv/bin/activate
+  $ pip install -r tests/requirements.txt
+  $ python tests/test_guest.py</pre></div>
 
 <p>During normal provisioning, <code>guest_venv</code> is setup automatically.  To run tests on the guest from the guest, run this command from the host:</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>vagrant ssh -c /vagrant/guest_venv/bin/python /vagrant/tests/test_guest
-</pre></div>
+<div class="highlight highlight-shell"><pre>  $ vagrant ssh -c <span class="pl-s1"><span class="pl-pds">"</span>/vagrant/guest_venv/bin/python /vagrant/tests/test_guest.py<span class="pl-pds">"</span></span></pre></div>
 
-<p><a name="user-content-running-demos" aria-hidden="true"></a></p>
+<p><a name="user-content-running-demos"></a></p>
 
 <h2>
-<a name="user-content-advanced-usage-running-demos" class="anchor" href="#advanced-usage-running-demos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advanced Usage: Running Demos</h2>
+<a id="user-content-running-demos" class="anchor" href="#running-demos" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Demos</h2>
 
 <p>During default provisioning, databases, message queues, and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.  All demos require you to connect to the guest and source the main guest virtual-environment:</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="nv">$ </span>vagrant ssh <span class="c"># connect to guest</span>
-  <span class="nv">$ </span><span class="nb">source</span> /vagrant/guest_venv/bin/activate <span class="c"># run this from guest</span>
-</pre></div>
+<div class="highlight highlight-shell"><pre>  $ vagrant ssh <span class="pl-c"># connect to guest</span>
+  $ <span class="pl-s3">source</span> /vagrant/guest_venv/bin/activate <span class="pl-c"># run this from guest</span></pre></div>
 
 <p>To run the <strong>celery/rabbit demo</strong> follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local <a href="http://admin:admin@localhost:5555">flower</a> and <a href="http://admin:admin@localhost:15672">rabbitmq</a> servers.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="c"># send 1000 and 500 tasks to add and subtract worker, respectively</span>
-  <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --add -n 1000
-  <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --add -n 500
-  <span class="c"># start a worker to deal with tasks</span>
-  <span class="nv">$ </span>python /vagrant/demos/demo_celery.py --worker
-</pre></div>
+<div class="highlight highlight-shell"><pre>  <span class="pl-c"># send 1000 and 500 tasks to add and subtract worker, respectively</span>
+  $ python /vagrant/demos/demo_celery.py --add -n 1000
+  $ python /vagrant/demos/demo_celery.py --add -n 500
+  <span class="pl-c"># start a worker to deal with tasks</span>
+  $ python /vagrant/demos/demo_celery.py --worker</pre></div>
 
-<p>To run the <strong>MongoDB demo</strong> follow the instructions below.  You can confirm the operations by checking <a href="http://admin:admin@localhost:5556">your local genghisapp</a> afterwards.</p>
+<p>To run the <strong>MongoDB demo</strong> follow the instructions below.  You can confirm the operations by checking <a href="http://admin:admin@localhost:5556">your local genghisapp</a>, specifically the <a href="http://localhost:5556/servers/localhost/databases/testdb/collections/user">user collection</a>.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="c"># create 50 fake users</span>
-  <span class="nv">$ </span>python /vagrant/demos/demo_mongo.py --records 50
-</pre></div>
+<div class="highlight highlight-shell"><pre>  <span class="pl-c"># create 50 fake users</span>
+  $ python /vagrant/demos/demo_mongo.py --records 50</pre></div>
 
-<p>To run the <strong>Neo4j demo</strong> follow the instructions below and the example movies database will be loaded.  Later, you can flush the database by using the <code>--wipedb</code> argument to the same script.  See the script code for other usage instructions.  After loading a dataset, visit <a href="http://localhost:7474/webadmin/#/data/search/0/">your local neo server</a>.</p>
+<p>To run the <strong>Neo4j demo</strong> you must already have done some of the <a href="#optional-provisioning">optional provisioning</a>, and then you can follow the instructions below. If it's not present on the guest in the /vagrant directory, the example movies database will be downloaded and afterwards it will be loaded into your neo server.  After loading a dataset, visit <a href="http://localhost:7474/webadmin/#/data/search/0/">your local neo server</a>.  If you want to start over, you can flush the database by using the <code>--wipedb</code> argument to the <code>demo_neo.py</code> script.  See the script code for other usage instructions.</p>
 
-<div class="highlight highlight-shell"><pre>  <span class="c"># load default datset "cieasts_12k_movies_50k"</span>
-  <span class="nv">$ </span>python /vagrant/demos/demo_neo.py
-</pre></div>
+<div class="highlight highlight-shell"><pre>  <span class="pl-c"># load default datset "cieasts_12k_movies_50k"</span>
+  $ python /vagrant/demos/demo_neo.py</pre></div>
 
-<p><a name="user-content-puppet-layout" aria-hidden="true"></a></p>
+<p><a name="user-content-implementation"></a></p>
 
 <h2>
-<a name="user-content-implementation-remarks-the-puppet-layout" class="anchor" href="#implementation-remarks-the-puppet-layout" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation Remarks: The Puppet Layout</h2>
+<a id="user-content-implementation-remarks" class="anchor" href="#implementation-remarks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Implementation Remarks</h2>
+
+<p>This section documents a few things that might be useful to people forking this recipe.  If you need toybox to execute additional git-clones, create or provision python virtualenvironments, etc, the examples in <strong>[1]</strong> will be useful.  To modify the nginx setup, start in <strong>[2]</strong>.  To execute additional configuration in the very last step of provisioning, see <strong>[3]</strong>.  To change the window-manager or other applications installed in provisioning xwindows, see <strong>[4]</strong>.  For examples of daemonizing random processes, check out the supervisorctl section in <strong>[5]</strong>.  As a place to add default additional system packages, <strong>[6]</strong> is the suggested spot.</p>
+
+<ol>
+<li><code>puppet/modules/site/manifests/my_code.pp</code></li>
+<li><code>puppet/modules/site/files/nginx_conf/sites-enabled/default</code></li>
+<li><code>puppet/modules/site/manifests/configuration.pp</code></li>
+<li><code>puppet/modules/site/manifests/xwindows.pp</code></li>
+<li><code>puppet/modules/core/manifests/toybox.pp</code></li>
+<li><code>puppet/modules/core/manifests/basic_dev.pp</code></li>
+</ol>
+
+<p><a name="user-content-puppet-idempotency"></a></p>
+
+<h4>
+<a id="user-content-pattern-idempotency" class="anchor" href="#pattern-idempotency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pattern Idempotency</h4>
+
+<p>Much effort has gone into making toybox as friendly as possible for low-bandwidth situations.  During repeated calls to <code>vagrant provision</code>, every effort has been made to avoid unnecessary duplication of effort for expensive network operations like <code>apt-get update</code>, <code>git clone</code>, and <code>pip install</code>.  However, relevant changes to configuration that involve new packages or changes to template files, etc, should always be honored.  Please file an issue on github if you find problems.</p>
+
+<p><a name="user-content-puppet-layout"></a></p>
+
+<h4>
+<a id="user-content-puppet-file-layout" class="anchor" href="#puppet-file-layout" aria-hidden="true"><span class="octicon octicon-link"></span></a>Puppet File Layout</h4>
 
 <ul>
 <li>Entry-point is <code>puppet/default.pp</code> (as named in the Vagrantfile)
@@ -309,14 +356,22 @@ Toybox is a template that builds an awesome development environment for virtualb
 </li>
 </ul>
 
-<p><a name="user-content-credits" aria-hidden="true"></a></p>
+<p><a name="user-content-contributing"></a></p>
 
 <h2>
-<a name="user-content-quick-links" class="anchor" href="#quick-links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick links:</h2>
+<a id="user-content-contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing:</h2>
+
+<p>Issues can be raised on <a href="https://github.com/mattvonrocketstein/toybox/issues">the bugtracker</a> and pull requests are always welcome.</p>
+
+<p><a name="user-content-credits"></a></p>
+
+<h2>
+<a id="user-content-quick-links" class="anchor" href="#quick-links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick links:</h2>
 
 <p>This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:</p>
 
 <ul>
+<li><a href="http://admin:admin@localhost:5557">kibana</a></li>
 <li><a href="http://admin:admin@localhost:5556">genghis</a></li>
 <li><a href="http://admin:admin@localhost:5555">flower</a></li>
 <li><a href="http://admin:admin@localhost:15672">rabbitmq</a></li>
@@ -325,25 +380,26 @@ Toybox is a template that builds an awesome development environment for virtualb
 <li><a href="http://admin:admin@localhost:7474">neo</a></li>
 </ul>
 
-<p><a name="user-content-todo" aria-hidden="true"></a></p>
+<p><a name="user-content-todo"></a></p>
 
 <h2>
-<a name="user-content-todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO:</h2>
+<a id="user-content-todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO:</h2>
 
 <ul>
-<li>Experimentation with the <a href="https://github.com/mitchellh/vagrant-aws">AWS provider</a>
+<li>Experimentation with the <a href="https://github.com/mitchellh/vagrant-aws">AWS provider</a>?</li>
+<li>Optional install for gephi (a graphdb browser)? use <a href="https://gist.github.com/dcht00/432caaf3e6c50a2202b8">these instructions</a>
 </li>
-<li>optional install for gephi using <a href="https://gist.github.com/dcht00/432caaf3e6c50a2202b8">these instructions</a>
-</li>
-<li>elasticsearch?</li>
+<li>Elasticsearch?</li>
+<li>Zookeeper?</li>
+<li>Logstash or similar?</li>
 </ul>
 
-<p><a name="user-content-credits" aria-hidden="true"></a></p>
+<p><a name="user-content-credits"></a></p>
 
 <h2>
-<a name="user-content-credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits:</h2>
+<a id="user-content-credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits:</h2>
 
-<p>Puppet is a crappy language for many reasons, but the worst thing about it is how difficult it is to reuse other code without forking.  Apart from puppet forge standard libraries included in this repo, I have benefited from the work mentioned below:</p>
+<p>Puppet can sometimes make it pretty difficult it is to reuse other code without forking.  Apart from puppet forge standard libraries included in this repo and amongst other things, I have benefited from the work mentioned below:</p>
 
 <ul>
 <li><a href="https://github.com/opencredo/neo4j-puppet">https://github.com/opencredo/neo4j-puppet</a></li>

@@ -6,3 +6,12 @@ server {
         root /opt/www;
     }
 }
+
+server {
+    listen          5557;
+    server_name     localhost;
+
+    location / {
+        root /opt/kibana/kibana;
+    }
+}

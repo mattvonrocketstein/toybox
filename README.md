@@ -219,6 +219,7 @@ Issues can be raised on [the bugtracker](https://github.com/mattvonrocketstein/t
 ##Quick links:
 This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
 
+* [kibana](http://admin:admin@localhost:5557)
 * [genghis](http://admin:admin@localhost:5556)
 * [flower](http://admin:admin@localhost:5555)
 * [rabbitmq](http://admin:admin@localhost:15672)

@@ -19,6 +19,7 @@ BASE_URL = 'http://localhost'
 
 HOST_PORTS = dict(
     neo=[7474, 200],
+    esearch=[9200, 200],
     nginx=[8080, 'any'],
     rabbit=[15672, 200],
     flower=[5555, 200],
@@ -27,6 +28,7 @@ HOST_PORTS = dict(
 
 GUEST_PORTS = dict(
     neo=[7474, 200],
+    esearch=[9200, 200],
     nginx=[80, 'any'],
     rabbit=[15672, 200],
     flower=[5555, 200],
