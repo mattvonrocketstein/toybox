@@ -1,5 +1,6 @@
 class site::logstash{
-
+  class {"blammo":
+  
   apt::source { 'lstash':
     #comment           => 'This is the iWeb Debian unstable mirror',
     location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
@@ -11,8 +12,9 @@ class site::logstash{
     #pin               => '-10',
     #include_src       => true,
     #include_deb       => true
-    stage => "first",
+    
   }
+  stage => "first",}
 
   file { '/etc/logstash/conf.d/logstash.conf':
     ensure  => file,
