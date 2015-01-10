@@ -1,20 +1,4 @@
 class site::logstash{
-  class {"blammo":
-  
-  apt::source { 'lstash':
-    #comment           => 'This is the iWeb Debian unstable mirror',
-    location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
-    release           => 'stable',
-    repos             => 'main',
-    #required_packages => 'debian-keyring debian-archive-keyring',
-    #key               => '8B48AD6246925553',
-    #key_server        => 'subkeys.pgp.net',
-    #pin               => '-10',
-    #include_src       => true,
-    #include_deb       => true
-    
-  }
-  stage => "first",}
 
   file { '/etc/logstash/conf.d/logstash.conf':
     ensure  => file,
