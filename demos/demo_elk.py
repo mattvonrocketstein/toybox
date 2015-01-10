@@ -7,6 +7,7 @@
 
 """
 import datetime
+import random
 import argparse
 import logging
 import logstash
@@ -23,10 +24,9 @@ test_logger = logging.getLogger('python-logstash-logger')
 test_logger.setLevel(logging.INFO)
 test_logger.addHandler(logstash.LogstashHandler(host, 5959, version=1))
 
-import random
 def build_records(num_records):
     # test_logger.addHandler(logstash.TCPLogstashHandler(host, 5959, version=1))
-    for i in range(len(num_records)):
+    for i in range(num_records):
         x = random.choice(xrange(100))
         test_logger.error('python-logstash: {0} test logstash error message.'.format(x))
         test_logger.info('python-logstash: {0} test logstash info message.'.format(x))

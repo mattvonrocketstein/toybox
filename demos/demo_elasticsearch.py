@@ -37,7 +37,7 @@ def build_records(num_records):
 
     #es.get(index="my-index", doc_type="test-type", id=42)['_source']
     #{u'any': u'data', u'timestamp': u'2013-05-12T19:45:31.804229'}
-    for i in range(len(num_records)):
+    for i in range(num_records):
         x = random.choice(xrange(100))
         # add extra field to logstash message
         extra = {
