@@ -1,4 +1,4 @@
-class site::logstash{
+class site::elk_stack{
 
   class { 'kibana':
     install_destination => '/opt/kibana',

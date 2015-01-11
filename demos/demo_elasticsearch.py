@@ -46,7 +46,8 @@ def build_records(num_records):
             'test_dict': {'a': x, 'b': 'c'},
             'test_float': x+1.23,
             'test_integer': x,
-            'test_list': [x]*2
+            'test_list': [x]*2,
+            'message': str([str(x)]*x)
             }
         body={"any": "data", "timestamp": datetime.now()}
         body.update(extra)
