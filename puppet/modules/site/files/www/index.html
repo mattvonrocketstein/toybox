@@ -45,7 +45,7 @@
               <div class="markdown-body entry-content">
                 <p><a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a></p>
 
-<p><a href="#optional-provisioning-xwin">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> | <a href="#implementation">implementation remarks</a> | <a href="#contributing">contributing</a> | <a href="#quick-links">quick-links</a> | <a href="#todo">todo</a> | <a href="#credits">credits</a></p>
+<p><a href="#optional-provisioning-xwin">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> | <a href="#implementation">implementation remarks</a> | <a href="#contributing">contributing</a> | <a href="#qlinks">quick-links</a> | <a href="#todo">todo</a> | <a href="#credits">credits</a></p>
 
 <h2>
 <a id="user-content-toybox" class="anchor" href="#toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toybox</h2>
@@ -85,7 +85,11 @@ Toybox is a template that builds an awesome development environment for virtualb
 
 <ul>
 <li>
-<a href="http://www.elasticsearch.org">kibana</a>: you know, for search
+<p>ELK stack</p>
+
+<ul>
+<li>
+<a href="http://www.elasticsearch.org/overview/kibana/">kibana</a>: the k in your ELK stack
 
 <ul>
 <li>default port @ 9200</li>
@@ -93,7 +97,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 </ul>
 </li>
 <li>
-<a href="http://www.elasticsearch.org">logstash</a>: you know, for search
+<a href="http://logstash.net/">logstash</a>:
 
 <ul>
 <li>default port @ 9200</li>
@@ -106,6 +110,9 @@ Toybox is a template that builds an awesome development environment for virtualb
 <ul>
 <li>default port @ 9200</li>
 <li>version is 1.2.1</li>
+<li>kopf WUI is installed</li>
+</ul>
+</li>
 </ul>
 </li>
 <li>
@@ -363,7 +370,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 
 <p>Issues can be raised on <a href="https://github.com/mattvonrocketstein/toybox/issues">the bugtracker</a> and pull requests are always welcome.</p>
 
-<p><a name="user-content-credits"></a></p>
+<p><a name="user-content-qlinks"></a></p>
 
 <h2>
 <a id="user-content-quick-links" class="anchor" href="#quick-links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick links:</h2>
@@ -371,6 +378,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 <p>This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:</p>
 
 <ul>
+<li><a href="http://localhost:9200/_plugin/kopf/#!/cluster">kopf</a></li>
 <li><a href="http://admin:admin@localhost:5557">kibana</a></li>
 <li><a href="http://admin:admin@localhost:5556">genghis</a></li>
 <li><a href="http://admin:admin@localhost:5555">flower</a></li>
@@ -389,9 +397,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 <li>Experimentation with the <a href="https://github.com/mitchellh/vagrant-aws">AWS provider</a>?</li>
 <li>Optional install for gephi (a graphdb browser)? use <a href="https://gist.github.com/dcht00/432caaf3e6c50a2202b8">these instructions</a>
 </li>
-<li>Elasticsearch?</li>
 <li>Zookeeper?</li>
-<li>Logstash or similar?</li>
 </ul>
 
 <p><a name="user-content-credits"></a></p>
