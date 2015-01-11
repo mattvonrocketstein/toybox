@@ -1,5 +1,5 @@
 server {
-    listen          80;
+    listen          *:80;
     server_name     localhost;
 
     location / {
@@ -8,10 +8,11 @@ server {
 }
 
 server {
-    listen          5557;
-    server_name     localhost;
-
+    listen                *:5557 ;
+    server_name           localhost;
+    access_log            /var/log/nginx/kibana.log;
     location / {
-        root /opt/kibana/kibana;
+        root  /opt/kibana/kibana;
+        index  index.html  index.htm;
     }
 }
