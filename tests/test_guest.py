@@ -15,7 +15,8 @@ import os
 import unittest
 import requests
 
-BASE_URL = 'http://localhost'
+HOST = os.environ.get('TOYBOX_HOST', 'localhost')
+BASE_URL = 'http://{0}'.format(HOST)
 
 HOST_PORTS = dict(
     neo=[7474, 200],
@@ -65,6 +66,3 @@ if not os.path.exists('/vagrant'):
     install(HOST_PORTS, TestGuestFromHost)
 else:
     install(GUEST_PORTS, TestGuestFromGuest)
-
-if __name__=='__main__':
-    unittest.main()

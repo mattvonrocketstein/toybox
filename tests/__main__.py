@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" tests/test_guest.py:
+""" __main__ for tests
 
     this file describes simple tests for the toybox guest.  you can run
     it directly without invoking pytest or nose.
