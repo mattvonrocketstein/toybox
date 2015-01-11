@@ -221,11 +221,10 @@ Issues can be raised on [the bugtracker](https://github.com/mattvonrocketstein/t
 <a name="qlinks"/>
 ##Quick links:
 This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
-
-* [kopf](http://localhost:9200/_plugin/kopf/#!/cluster)
-* [kibana](http://admin:admin@localhost:5557)
-* [genghis](http://admin:admin@localhost:5556)
-* [flower](http://admin:admin@localhost:5555)
+* [kibana](http://localhost:5557/#/dashboard/file/toybox.json)
+* [kopf (elasticsearch)](http://localhost:9200/_plugin/kopf/#!/cluster)
+* [genghis (mongo)](http://admin:admin@localhost:5556)
+* [flower (celery)](http://admin:admin@localhost:5555)
 * [rabbitmq](http://admin:admin@localhost:15672)
 * [supervisor](http://admin:admin@localhost:9001)
 * [nginx](http://admin:admin@localhost:8080)
