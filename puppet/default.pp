@@ -1,7 +1,160 @@
 # default.pp
 #
+class xwindows{
+  $xwindows_xwin_base=['xinit']
+  $xwindows_wm_utils = ['xmonad', 'xclip', 'dmenu','gmrun', 'stalonetray']
+  $xwindows_dev_tools = ['emacs23']
+  $xwindows_misc = ['chromium-browser']
+  package { $xwindows_xwin_base: ensure => installed}
+  package { $xwindows_wm_utils: ensure => installed}
+  package { $xwindows_dev_tools: ensure => installed}
+  package { $xwindows_misc: ensure => installed}
+}
+
 # puppet/modules/core/manifests/toybox.pp
 #
+# puppet-vcsrepo sucks.  despite the popularity of git and the fact
+# that only git is officially supported, there is a two-year old bug
+# where this module will fetch on the network every time provisioning
+# happens, regardless of whether the repo already exists on the correct
+# branch.  below you can find an example of how to use the git module to
+# effect clones.  note that the git module does not support "user", so
+# don't forget to chown the repo afterwards if you want a non-root user.
+#
+class my_code{
+  # GIT CLONE EXAMPLE:
+  #
+  # git::repo{'puppet-git':
+  #   path   => '/tmp/puppet-git',
+  #   branch => 'master',
+  #   ##source => 'git://example.org/example/repo.git'
+  #   source => 'https://github.com/nesi/puppet-git.git'
+  # }-> exec {'chown -R vagrant:vagrant /tmp/pg':}
+
+  # PYTHON PIP EXAMPLE (installation is system-wide unless venv is given)
+  python::pip { 'fabric' :
+    pkgname       => 'fabric',
+    timeout       => 1800,
+  }
+
+  # PYTHON VENV/REQS EXAMPLE
+  # this is needed to run tests and demos.
+  # see toybox README.md
+  python::virtualenv { '/vagrant/guest_venv' :
+      ensure       => present,
+      version      => 'system',
+      systempkgs   => true,
+      owner        => 'vagrant',
+      group        => 'vagrant',
+      # proxy        => 'http://proxy.domain.com:3128',
+      # distribute   => false,
+      # cwd          => '/var/www/project1',
+      # timeout      => 0,
+  }
+
+  python::requirements { 'test requirements' :
+    virtualenv => '/vagrant/guest_venv',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/tests/requirements.txt',
+  }
+
+  python::requirements { 'demo requirements' :
+    virtualenv => '/vagrant/guest_venv',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/demos/requirements.txt',
+  }
+}
+
+class elk_stack {
+
+  class { 'kibana':
+    install_destination => '/opt/kibana',
+    elasticsearch_url   => "http://localhost:9200",
+    version             => "3.0.1",
+    } ->
+    file { '/opt/kibana/kibana/app/dashboards/toybox.json':
+      ensure  => file,
+      content => template('site/toybox_kibana_dashboard.json.erb'),
+    }
+
+    class { 'elasticsearch':
+      datadir     => '/opt/elasticsearch-data',
+      package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
+      }->
+      exec {
+        'ES-at-boot':
+          require => Package['elasticsearch'],
+          command => 'sudo update-rc.d elasticsearch defaults 95 10'
+          }->
+          exec {
+            'install-kopf':
+              require => Package['elasticsearch'],
+              command => "sudo /usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
+              unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"}
+
+            apt::source { 'lstash':
+              #comment           => 'This is the iWeb Debian unstable mirror',
+              location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
+              release           => 'stable',
+              repos             => 'main',
+              #required_packages => 'debian-keyring debian-archive-keyring',
+              #key               => '8B48AD6246925553',
+              #key_server        => 'subkeys.pgp.net',
+              #pin               => '-10',
+              #include_src       => true,
+              #include_deb       => true
+
+              }->
+              exec { 'install_logstash':
+                command => 'sudo apt-get install -y --force-yes logstash=1.4.2-1-2c0f5a1',
+                #require => Exec['update_apt_for_logstash'],
+                }->
+                file { '/etc/logstash/conf.d/logstash.conf':
+                  ensure  => file,
+                  content => template('site/logstash.conf.erb'),
+                }
+}
+
+class basic_dev{
+
+  $basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs', 'htop']
+  $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
+  $basic_dev_scala_base = ['scala']
+
+  package {$basic_dev_misc_tools:ensure => installed}
+  package {$basic_dev_ruby_base:ensure => installed}
+
+  class { git:
+    svn => 'absent',
+    gui => 'absent',
+  }
+
+  class { 'python' :
+    version    => 'system',
+    pip        => true,
+    dev        => true,
+    virtualenv => true,
+    gunicorn   => false,
+  }
+}
+
+class install_java{
+  case $operatingsystem {
+    /(Ubuntu|Debian)/: {
+      $jreinstaller = 'default-jre'
+    }
+    /(RedHat|CentOS|Fedora)/: {
+      $jreinstaller = 'java-1.6.0-openjdk'
+    }
+  }
+  package {
+    "${jreinstaller}":
+      ensure  => installed;
+  }
+}
+
 class toybox1{
 
   package { 'mongodb':
@@ -31,12 +184,6 @@ class toybox1{
     pkgname       => 'flower==0.7.3',
     timeout       => 1800,
   }
-  #exec { 'sudo /usr/bin/pip install flower==0.7.3':
-  #  require => [
-  #    Package['celeryd'],
-  #    Package['python-pip'],],
-  #  unless  => 'pip freeze | grep "flower==0.7.3"'
-  #}
 
   # fix a bug where ubuntu installs an older version, or
   # celery will segfault into an otherwise silent error
@@ -44,24 +191,20 @@ class toybox1{
     pkgname => "librabbitmq==1.5.2",
     timeout => 1800,
     require => [
-      Package['celeryd'],
-      Package['python-pip']],
+                Package['celeryd'],
+                Package['python-pip']],
   }
-  #exec { 'sudo /usr/bin/pip install librabbitmq==1.5.2':
-  #  require => [
-  #    Package['celeryd'],
-  #    Package['python-pip']],
-  #  unless  => 'pip freeze | grep "librabbitmq==1.5.2"'
-  #}
 
   exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "genghisapp"'
   }
+
   exec { 'sudo gem install bson_ext -v 1.9.2':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "bson_ext (1.9.2)"'
   }
+
   # see https://forge.puppetlabs.com/proletaryo/supervisor
   class { 'supervisor':
     include_superlance      => true,
@@ -74,6 +217,7 @@ class toybox1{
     enable  => true,
     command => $fcmd,
   }
+
   $gcmd='genghisapp --foreground --port 5556'
   supervisor::program { 'genghisapp':
     ensure      => present,
@@ -83,26 +227,10 @@ class toybox1{
   }
 }
 
-class jpackage {
-  case $operatingsystem {
-    /(Ubuntu|Debian)/: {
-      $jreinstaller = 'default-jre'
-    }
-    /(RedHat|CentOS|Fedora)/: {
-      $jreinstaller = 'java-1.6.0-openjdk'
-    }
-  }
-  package {
-    "${jreinstaller}":
-      ensure  => installed;
-  }
-}
-
 node default {
   Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin'}
   stage { 'first': before => Stage[main] }
   stage { 'last': require => Stage[main] }
-  #class { "zources": stage => "first"; }
 
   class{'site::update_apt': stage => first }
   class{'site::configuration': stage => last }
@@ -111,6 +239,7 @@ node default {
     source_dir       => 'puppet:///modules/site/nginx_conf',
     source_dir_purge => false,
   }
+
   file { '/opt/www':
     ensure  => directory,
     path    => '/opt/www',
@@ -119,21 +248,28 @@ node default {
     recurse => true,
   }
 
+  file { '/opt/toybox':
+    ensure  => directory,
+    path    => '/opt/toybox',
+    source  => 'puppet:///modules/site/toybox',
+    recurse => true,
+  }
+
   file { '/etc/motd':
     ensure  => file,
     content => template('site/motd.erb'),
   }
 
-  include jpackage
-  include core::basic_dev
+  include install_java
+  include basic_dev
   include toybox1
-  include site::elk_stack
-  include site::my_code
+  include elk_stack
+  include my_code
 
   # requires java, which is installed by neo
 
   if $vagrant_provision_xwin {
-    include site::xwindows
+    include xwindows
   }
 
   if $vagrant_provision_neo {

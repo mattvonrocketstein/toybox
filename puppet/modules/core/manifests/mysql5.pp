@@ -1,4 +1,5 @@
 # puppet/modules/core/manifests/mysql5.pp
+#
 class core::mysql5 {
     package { 'mysql-client':
         ensure => installed,
