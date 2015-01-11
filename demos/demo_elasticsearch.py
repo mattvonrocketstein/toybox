@@ -6,29 +6,27 @@
         $ demo_elasticsearch --records 500
 
 """
+import random
 import datetime
 import argparse
 import logging
 import logstash
 import sys
 
-host = 'localhost'
 from datetime import datetime
 from elasticsearch import Elasticsearch
 
-
+host = 'localhost'
 
 def build_parser():
     parser = argparse.ArgumentParser(conflict_handler='resolve')
     parser.add_argument('-n','--records', type=int, default=0)
     return parser
 
-import random
 def build_records(num_records):
     # test_logger.addHandler(logstash.TCPLogstashHandler(host, 5959, version=1))
     # create an index in elasticsearch, ignore status code 400 (index already exists)
-    # by default we connect to localhost:9200
-    es = Elasticsearch()
+    es = Elasticsearch('http://localhost:9200')
     es.indices.create(index='toybox-demo', ignore=400)
     #{u'acknowledged': True}
 
@@ -49,11 +47,12 @@ def build_records(num_records):
             'test_list': [x]*2,
             'message': str([str(x)]*x)
             }
-        body={"any": "data", "timestamp": datetime.now()}
+        body = {"any": "data", "timestamp": datetime.now()}
         body.update(extra)
         es.index(index="my-index", doc_type="test-type", id=i,
                  body=body)
         print i
+
 if __name__=='__main__':
     parser = build_parser()
     args = parser.parse_args()

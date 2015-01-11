@@ -1,6 +1,6 @@
 [requirements](#requirements) | [batteries included](#batteries) | [toys in the toybox](#toybox)
 
-[optional stuff](#optional-provisioning-xwin) | [tests](#running-tests) | [demos](#running-demos) | [implementation remarks](#implementation) | [contributing](#contributing) | [quick-links](#qlinks) | [todo](#todo) | [credits](#credits)
+[optional stuff](#optional-provisioning-xwin) | [tests](#runtests) | [demos](#rundemos) | [implementation remarks](#implementation) | [contributing](#contributing) | [quick-links](#qlinks) | [todo](#todo) | [credits](#credits)
 
 ##Toybox
 
@@ -107,7 +107,7 @@ If you don't see the _"non-zero exit status"_ message, then it probably succeede
   $ vagrant reload
 ```
 
-After this, your box should be working.  You can connect to it now, or try [running the tests](#running-tests).
+After this, your box should be working.  You can connect to it now, or try [running the tests](#runtests).
 
 ```shell
    $ vagrant ssh
@@ -135,23 +135,23 @@ Provisioning neo is similar to provisioning XWindows, but you will need to downl
   $ PROVISION_NEO=true vagrant provision
 ```
 
-<a name="running-tests"/>
+<a name="runtests"/>
 ##Running Tests
-Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the `/vagrant` directory.
+Tests can be run from either the guest or the host, but the tests in each case are slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the `/vagrant` directory.
 
-By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:
+By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  When making changes to toybox, it is useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:
 
 ```shell
   $ virtualenv host_venv
   $ source host_venv/bin/activate
-  $ pip install -r tests/requirements.txt
-  $ python tests/test_guest.py
+  $ pip install tox
+  $ tox -e host
 ```
 
 During normal provisioning, `guest_venv` is setup automatically.  To run tests on the guest from the guest, run this command from the host:
 
 ```shell
-  $ vagrant ssh -c "/vagrant/guest_venv/bin/python /vagrant/tests/test_guest.py"
+  $ vagrant ssh -c "cd /vagrant/; /vagrant/guest_venv/bin/tox -e guest"
 ```
 
 <a name="running-demos"/>
