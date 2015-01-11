@@ -45,7 +45,7 @@
               <div class="markdown-body entry-content">
                 <p><a href="#requirements">requirements</a> | <a href="#batteries">batteries included</a> | <a href="#toybox">toys in the toybox</a></p>
 
-<p><a href="#optional-provisioning-xwin">optional stuff</a> | <a href="#running-tests">tests</a> | <a href="#running-demos">demos</a> | <a href="#implementation">implementation remarks</a> | <a href="#contributing">contributing</a> | <a href="#qlinks">quick-links</a> | <a href="#todo">todo</a> | <a href="#credits">credits</a></p>
+<p><a href="#optional-provisioning-xwin">optional stuff</a> | <a href="#runtests">tests</a> | <a href="#rundemos">demos</a> | <a href="#implementation">implementation remarks</a> | <a href="#contributing">contributing</a> | <a href="#qlinks">quick-links</a> | <a href="#todo">todo</a> | <a href="#credits">credits</a></p>
 
 <h2>
 <a id="user-content-toybox" class="anchor" href="#toybox" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toybox</h2>
@@ -232,7 +232,7 @@ Toybox is a template that builds an awesome development environment for virtualb
 
 <div class="highlight highlight-shell"><pre>  $ vagrant reload</pre></div>
 
-<p>After this, your box should be working.  You can connect to it now, or try <a href="#running-tests">running the tests</a>.</p>
+<p>After this, your box should be working.  You can connect to it now, or try <a href="#runtests">running the tests</a>.</p>
 
 <div class="highlight highlight-shell"><pre>   $ vagrant ssh</pre></div>
 
@@ -260,23 +260,23 @@ Toybox is a template that builds an awesome development environment for virtualb
 <div class="highlight highlight-shell"><pre>  $ wget http://dist.neo4j.org/neo4j-community-1.7.2-unix.tar.gz
   $ PROVISION_NEO=<span class="pl-s3">true</span> vagrant provision</pre></div>
 
-<p><a name="user-content-running-tests"></a></p>
+<p><a name="user-content-runtests"></a></p>
 
 <h2>
 <a id="user-content-running-tests" class="anchor" href="#running-tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Tests</h2>
 
-<p>Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the <code>/vagrant</code> directory.</p>
+<p>Tests can be run from either the guest or the host, but the tests in each case are slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the <code>/vagrant</code> directory.</p>
 
-<p>By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:</p>
+<p>By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  When making changes to toybox, it is useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:</p>
 
 <div class="highlight highlight-shell"><pre>  $ virtualenv host_venv
   $ <span class="pl-s3">source</span> host_venv/bin/activate
-  $ pip install -r tests/requirements.txt
-  $ python tests/test_guest.py</pre></div>
+  $ pip install tox
+  $ tox -e host</pre></div>
 
 <p>During normal provisioning, <code>guest_venv</code> is setup automatically.  To run tests on the guest from the guest, run this command from the host:</p>
 
-<div class="highlight highlight-shell"><pre>  $ vagrant ssh -c <span class="pl-s1"><span class="pl-pds">"</span>/vagrant/guest_venv/bin/python /vagrant/tests/test_guest.py<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-shell"><pre>  $ vagrant ssh -c <span class="pl-s1"><span class="pl-pds">"</span>cd /vagrant/; /vagrant/guest_venv/bin/tox -e guest<span class="pl-pds">"</span></span></pre></div>
 
 <p><a name="user-content-running-demos"></a></p>
 
@@ -378,10 +378,10 @@ Toybox is a template that builds an awesome development environment for virtualb
 <p>This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:</p>
 
 <ul>
-<li><a href="http://localhost:9200/_plugin/kopf/#!/cluster">kopf</a></li>
-<li><a href="http://admin:admin@localhost:5557">kibana</a></li>
-<li><a href="http://admin:admin@localhost:5556">genghis</a></li>
-<li><a href="http://admin:admin@localhost:5555">flower</a></li>
+<li><a href="http://localhost:5557/#/dashboard/file/toybox.json">kibana</a></li>
+<li><a href="http://localhost:9200/_plugin/kopf/#!/cluster">kopf (elasticsearch)</a></li>
+<li><a href="http://admin:admin@localhost:5556">genghis (mongo)</a></li>
+<li><a href="http://admin:admin@localhost:5555">flower (celery)</a></li>
 <li><a href="http://admin:admin@localhost:15672">rabbitmq</a></li>
 <li><a href="http://admin:admin@localhost:9001">supervisor</a></li>
 <li><a href="http://admin:admin@localhost:8080">nginx</a></li>
