@@ -23,9 +23,9 @@ class site::elk_stack{
             'install-kopf':
               require => Package['elasticsearch'],
               command => "sudo /usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
-              unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"
+              unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"}
 
-              apt::source { 'lstash':
+            apt::source { 'lstash':
                 #comment           => 'This is the iWeb Debian unstable mirror',
                 location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
                 release           => 'stable',
