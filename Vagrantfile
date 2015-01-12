@@ -6,7 +6,7 @@
 FACTER = {}
 FACTER[:toybox_provision_xwin] = ENV["PROVISION_XWIN"] or ""
 FACTER[:toybox_extra_packages] = ENV["PROVISION_XTRAS"] or "[]"
-FACTER[:toybox_extra_packages] = JSON.parse FACTER[:toybox_extra_packages]
+#FACTER[:toybox_extra_packages] = JSON.parse FACTER[:toybox_extra_packages]
 FACTER[:toybox_provision_neo] = ENV["PROVISION_NEO"] or ""
 FACTER[:toybox_provision_rabbit] = ENV["PROVISION_RABBIT"] or ""
 FACTER[:toybox_provision_java] = ENV["PROVISION_JAVA"] or ""
@@ -34,6 +34,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 9001, host: 9001
   config.vm.network "forwarded_port", guest: 9200, host: 9200
   config.vm.network "forwarded_port", guest: 7474, host: 7474
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. Options are provider-specific.
