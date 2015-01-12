@@ -215,6 +215,22 @@ class install_mongo{
 }
 class toybox1 {
 
+  file { '/etc/motd':
+    ensure  => file,
+    content => template('site/motd.erb'),
+  }
+
+  python::virtualenv { '/opt/toybox' :
+    ensure       => present,
+    version      => 'system',
+    systempkgs   => true,
+    owner        => 'vagrant',
+    group        => 'vagrant',
+    # proxy        => 'http://proxy.domain.com:3128',
+    # distribute   => false,
+    # cwd          => '/var/www/project1',
+    # timeout      => 0,
+  }
 
   # see https://forge.puppetlabs.com/proletaryo/supervisor
   class { 'supervisor':
@@ -243,7 +259,19 @@ class update_apt {
     onlyif  => "/bin/sh -c '[ ! -f /var/cache/apt/pkgcache.bin ] || /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin | /bin/grep . > /dev/null'",
   }
 }
-
+class install_nginx{
+  class { 'nginx':
+    source_dir       => 'puppet:///modules/site/nginx_conf',
+    source_dir_purge => false,
+  }
+  file { '/opt/www':
+    ensure  => directory,
+    path    => '/opt/www',
+    require => File['/etc/nginx/nginx.conf'],
+    source  => 'puppet:///modules/site/www',
+    recurse => true,
+  }
+}
 # configured to run the 'last' stage
 # e.g., this will run AFTER everything else runs
 # place any final config actions here
@@ -258,40 +286,14 @@ node default {
   class{'update_apt': stage => first }
   class{'configuration': stage => last }
 
-  file { '/etc/motd':
-    ensure  => file,
-    content => template('site/motd.erb'),
-  }
-
-  class { 'nginx':
-    source_dir       => 'puppet:///modules/site/nginx_conf',
-    source_dir_purge => false,
-  }
-
-  file { '/opt/www':
-    ensure  => directory,
-    path    => '/opt/www',
-    require => File['/etc/nginx/nginx.conf'],
-    source  => 'puppet:///modules/site/www',
-    recurse => true,
-  }
-
-  python::virtualenv { '/opt/toybox' :
-    ensure       => present,
-    version      => 'system',
-    systempkgs   => true,
-    owner        => 'vagrant',
-    group        => 'vagrant',
-    # proxy        => 'http://proxy.domain.com:3128',
-    # distribute   => false,
-    # cwd          => '/var/www/project1',
-    # timeout      => 0,
-  }
-
-
   include basic_dev
   include toybox1
   include my_code
+
+  if $toybox_provision_nginx {
+    notice("install_nginx")
+    include install_nginx
+  }
 
   if $toybox_provision_mongo {
     notice("install_mongo")
