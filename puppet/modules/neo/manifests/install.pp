@@ -5,10 +5,10 @@ class neo::install {
 
   require neo::params
 
-  package {
-    "${neo::params::jreinstaller}":
-      ensure  => installed;
-  }
+  #package {
+  #  "${neo::params::jreinstaller}":
+  #    ensure  => installed;
+  #}
 
   file {
     "${neo::params::installationdir}":
