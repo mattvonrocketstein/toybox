@@ -53,22 +53,28 @@ class my_code{
   }
 
   python::requirements { 'test requirements' :
-    virtualenv => '/vagrant/guest_venv',
+    virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
     requirements => '/vagrant/tests/requirements.txt',
   }
 
+  python::requirements { 'other requirements' :
+    virtualenv => '/opt/toybox',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/requirements.txt',
+  }
+
   python::requirements { 'demo requirements' :
-    virtualenv => '/vagrant/guest_venv',
+    virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
     requirements => '/vagrant/demos/requirements.txt',
   }
 }
 
-class elk_stack {
-
+class install_kibana {
   class { 'kibana':
     install_destination => '/opt/kibana',
     elasticsearch_url   => "http://localhost:9200",
@@ -78,54 +84,56 @@ class elk_stack {
       ensure  => file,
       content => template('site/toybox_kibana_dashboard.json.erb'),
     }
+}
 
-    class { 'elasticsearch':
-      datadir     => '/opt/elasticsearch-data',
-      package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
-      }->
-      exec {
-        'ES-at-boot':
-          require => Package['elasticsearch'],
-          command => 'sudo update-rc.d elasticsearch defaults 95 10'
-          }->
-          exec {
-            'install-kopf':
-              require => Package['elasticsearch'],
-              command => "sudo /usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
-              unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"}
+class elk_stack {
+  include install_kibana
 
-            apt::source { 'lstash':
-              #comment           => 'This is the iWeb Debian unstable mirror',
-              location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
-              release           => 'stable',
-              repos             => 'main',
-              #required_packages => 'debian-keyring debian-archive-keyring',
-              #key               => '8B48AD6246925553',
-              #key_server        => 'subkeys.pgp.net',
-              #pin               => '-10',
-              #include_src       => true,
-              #include_deb       => true
+  class { 'elasticsearch':
+    datadir     => '/opt/elasticsearch-data',
+    package_url => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb'
+    }->
+    exec {
+      'ES-at-boot':
+        require => Package['elasticsearch'],
+        command => 'sudo update-rc.d elasticsearch defaults 95 10'
+        }->
+        exec {
+          'install-kopf':
+            require => Package['elasticsearch'],
+            command => "sudo /usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
+            unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"}
 
+          apt::source { 'lstash':
+            #comment           => 'This is the iWeb Debian unstable mirror',
+            location          => 'http://packages.elasticsearch.org/logstash/1.4/debian',
+            release           => 'stable',
+            repos             => 'main',
+            #required_packages => 'debian-keyring debian-archive-keyring',
+            #key               => '8B48AD6246925553',
+            #key_server        => 'subkeys.pgp.net',
+            #pin               => '-10',
+            #include_src       => true,
+            #include_deb       => true
+
+            }->
+            exec { 'install_logstash':
+              command => 'sudo apt-get install -y --force-yes logstash=1.4.2-1-2c0f5a1',
+              #require => Exec['update_apt_for_logstash'],
               }->
-              exec { 'install_logstash':
-                command => 'sudo apt-get install -y --force-yes logstash=1.4.2-1-2c0f5a1',
-                #require => Exec['update_apt_for_logstash'],
-                }->
-                file { '/etc/logstash/conf.d/logstash.conf':
-                  ensure  => file,
-                  content => template('site/logstash.conf.erb'),
-                }
+              file { '/etc/logstash/conf.d/logstash.conf':
+                ensure  => file,
+                content => template('site/logstash.conf.erb'),
+              }
 }
 
 class basic_dev{
 
-  #$basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs', 'htop']
-  #print{$toybox_extra_packages: }
   $basic_dev_misc_tools = parsejson($toybox_extra_packages)
-  $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
-  $basic_dev_scala_base = ['scala']
-
   package {$basic_dev_misc_tools:ensure => installed}
+
+  # basic ruby base is not optional (used by genghis etc)
+  $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
   package {$basic_dev_ruby_base:ensure => installed}
 
   class { git:
@@ -186,6 +194,7 @@ class install_rabbit{
                 Package['python-pip']],
   }
 }
+
 class install_genghis{
   exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
