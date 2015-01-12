@@ -24,6 +24,7 @@ def entry():
     tmp['PROVISION_NEO'] = settings['neo4j'].get('enable', "")
     tmp['PROVISION_XWIN'] = settings['xwindows'].get('enable', "")
     tmp['PROVISION_ELASTICSEARCH']  = settings['elasticsearch'].get("enable","")
+    tmp['PROVISION_RABBIT']  = settings['rabbitmq'].get("enable","")
     tmp['PROVISION_JAVA'] = tmp['PROVISION_ELASTICSEARCH'] or \
                             tmp['PROVISION_NEO']
     for k,v in tmp.items():
