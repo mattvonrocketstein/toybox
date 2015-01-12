@@ -1,0 +1,2 @@
+goulash==0.52
+configparser

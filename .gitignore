@@ -1,9 +1,11 @@
-neo4j-community-1.7.2-unix.tar.gz
-libpeerconnection.log
 *.pyc
-*.elc
+node/*
+*/*.egg-info/*
 #*
 *#
-host_venv
-guest_venv
-.vagrant
+.tox/*
+build
+*.egg-info
+dist
+venv_*/*
+.coverage

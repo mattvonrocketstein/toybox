@@ -119,7 +119,8 @@ class elk_stack {
 
 class basic_dev{
 
-  $basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs', 'htop']
+  #$basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs', 'htop']
+  $basic_dev_misc_tools = $toybox_extra_packages
   $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
   $basic_dev_scala_base = ['scala']
 
@@ -226,14 +227,31 @@ class toybox1{
     environment => 'HOME=/home/vagrant',
   }
 }
+class update_apt {
+  exec{'apt-get update':
+    command => '/usr/bin/apt-get update',
+    onlyif  => "/bin/sh -c '[ ! -f /var/cache/apt/pkgcache.bin ] || /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin | /bin/grep . > /dev/null'",
+  }
+}
+
+# configured to run the 'last' stage
+# e.g., this will run AFTER everything else runs
+# place any final config actions here
+#
+class configuration{}
 
 node default {
   Exec { path => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin'}
   stage { 'first': before => Stage[main] }
   stage { 'last': require => Stage[main] }
 
-  class{'site::update_apt': stage => first }
-  class{'site::configuration': stage => last }
+  class{'update_apt': stage => first }
+  class{'configuration': stage => last }
+
+  file { '/etc/motd':
+    ensure  => file,
+    content => template('site/motd.erb'),
+  }
 
   class { 'nginx':
     source_dir       => 'puppet:///modules/site/nginx_conf',
@@ -248,31 +266,34 @@ node default {
     recurse => true,
   }
 
-  file { '/opt/toybox':
-    ensure  => directory,
-    path    => '/opt/toybox',
-    source  => 'puppet:///modules/site/toybox',
-    recurse => true,
+  python::virtualenv { '/opt/toybox' :
+      ensure       => present,
+      version      => 'system',
+      systempkgs   => true,
+      owner        => 'vagrant',
+      group        => 'vagrant',
+      # proxy        => 'http://proxy.domain.com:3128',
+      # distribute   => false,
+      # cwd          => '/var/www/project1',
+      # timeout      => 0,
   }
 
-  file { '/etc/motd':
-    ensure  => file,
-    content => template('site/motd.erb'),
-  }
 
-  include install_java
   include basic_dev
   include toybox1
-  include elk_stack
   include my_code
 
-  # requires java, which is installed by neo
-
-  if $vagrant_provision_xwin {
+  if $toybox_provision_java {
+    include install_java
+  }
+  if $toybox_provision_xwin {
     include xwindows
   }
+  if $toybox_provision_elasticsearch{
+    include elk_stack
+  }
 
-  if $vagrant_provision_neo {
+  if $toybox_provision_neo {
     # see https://github.com/opencredo/neo4j-puppet
     include neo
     exec {

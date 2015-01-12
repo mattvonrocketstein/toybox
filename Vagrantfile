@@ -4,8 +4,12 @@
 # Ask the environment for some facts about whether
 # the user has requested the optional provisioning
 FACTER = {}
-FACTER[:vagrant_provision_xwin] = ENV["PROVISION_XWIN"] or ""
-FACTER[:vagrant_provision_neo] = ENV["PROVISION_NEO"] or ""
+FACTER[:toybox_provision_xwin] = ENV["PROVISION_XWIN"] or ""
+FACTER[:toybox_extra_packages] = ENV["PROVISION_XTRAS"] or "[]"
+FACTER[:toybox_extra_packages] = JSON.parse FACTER[:toybox_extra_packages]
+FACTER[:toybox_provision_neo] = ENV["PROVISION_NEO"] or ""
+FACTER[:toybox_provision_java] = ENV["PROVISION_JAVA"] or ""
+FACTER[:toybox_provision_elasticsearch] = ENV["PROVISION_ELASTICSEARCH"] or ""
 
 VAGRANTFILE_API_VERSION = "2" # Vagrantfile API/syntax version.
 DEFAULT_NAME = "toybox" # used for hostname and virtualbox nickname
