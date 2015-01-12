@@ -31,4 +31,4 @@ def entry():
         os.environ[k] = v
     raw_input('\nenter to continue.\n')
     import subprocess
-    subprocess.Popen('vagrant provision', env=os.environ.copy())
+    subprocess.Popen(['vagrant','provision'], shell=True, env=os.environ.copy())
