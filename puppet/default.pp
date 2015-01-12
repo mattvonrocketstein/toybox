@@ -4,12 +4,6 @@ define print() {
   notice("The value is: '${name}'")
 }
 
-class xwindows{
-  $xwindows_xwin_base=['xinit']
-  $xwindows_extra = parsejson($toybox_xwin_extra)
-  package { $xwindows_xwin_base: ensure => installed}
-  package { $xwindows_extra: ensure => installed}
-}
 
 # puppet/modules/core/manifests/toybox.pp
 #
@@ -51,26 +45,38 @@ class my_code{
     # cwd          => '/var/www/project1',
     # timeout      => 0,
   }
+}
 
-  python::requirements { 'test requirements' :
-    virtualenv => '/opt/toybox',
-    owner      => 'vagrant',
-    group      => 'vagrant',
-    requirements => '/vagrant/tests/requirements.txt',
+class install_xwindows{
+  $xwindows_xwin_base=['xinit']
+  $xwindows_extra = parsejson($toybox_xwin_extra)
+  package { $xwindows_xwin_base: ensure => installed}
+  package { $xwindows_extra: ensure => installed}
+}
+
+class install_nginx{
+  class { 'nginx':
+    source_dir       => 'puppet:///modules/site/nginx_conf',
+    source_dir_purge => false,
   }
-
-  python::requirements { 'other requirements' :
-    virtualenv => '/opt/toybox',
-    owner      => 'vagrant',
-    group      => 'vagrant',
-    requirements => '/vagrant/requirements.txt',
+  file { '/opt/www':
+    ensure  => directory,
+    path    => '/opt/www',
+    require => File['/etc/nginx/nginx.conf'],
+    source  => 'puppet:///modules/site/www',
+    recurse => true,
   }
+}
 
-  python::requirements { 'demo requirements' :
-    virtualenv => '/opt/toybox',
-    owner      => 'vagrant',
-    group      => 'vagrant',
-    requirements => '/vagrant/demos/requirements.txt',
+class install_neo{
+  notice("install_neo")
+  # see https://github.com/opencredo/neo4j-puppet
+  include neo
+  exec {
+    'install-neo-python':
+      require => Package['python-pip'],
+      command => 'pip install neo4j-embedded',
+      unless  => 'pip freeze|grep neo4j-embedded'
   }
 }
 
@@ -97,12 +103,12 @@ class elk_stack {
       'ES-at-boot':
         require => Package['elasticsearch'],
         command => 'sudo update-rc.d elasticsearch defaults 95 10'
-        }->
+        } ->
         exec {
           'install-kopf':
             require => Package['elasticsearch'],
-            command => "sudo /usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
-            unless=>"sudo /usr/share/elasticsearch/bin/plugin --list|grep kopf"}
+            command => "/usr/share/elasticsearch/bin/plugin --install lmenezes/elasticsearch-kopf",
+            unless => "/usr/share/elasticsearch/bin/plugin --list|grep kopf"}
 
           apt::source { 'lstash':
             #comment           => 'This is the iWeb Debian unstable mirror',
@@ -125,29 +131,6 @@ class elk_stack {
                 ensure  => file,
                 content => template('site/logstash.conf.erb'),
               }
-}
-
-class basic_dev{
-
-  $basic_dev_misc_tools = parsejson($toybox_extra_packages)
-  package {$basic_dev_misc_tools:ensure => installed}
-
-  # basic ruby base is not optional (used by genghis etc)
-  $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
-  package {$basic_dev_ruby_base:ensure => installed}
-
-  class { git:
-    svn => 'absent',
-    gui => 'absent',
-  }
-
-  class { 'python' :
-    version    => 'system',
-    pip        => true,
-    dev        => true,
-    virtualenv => true,
-    gunicorn   => false,
-  }
 }
 
 class install_java{
@@ -184,6 +167,13 @@ class install_rabbit{
     timeout       => 1800,
   }
 
+  $fcmd='celery flower --broker=amqp://guest:guest@localhost:5672// --port=5555'
+  supervisor::program { 'flower':
+    ensure  => present,
+    enable  => true,
+    command => $fcmd,
+  }
+
   # fix a bug where ubuntu installs an older version, or
   # celery will segfault into an otherwise silent error
   python::pip {'librabbitmq==1.5.2':
@@ -195,7 +185,7 @@ class install_rabbit{
   }
 }
 
-class install_genghis{
+class install_genghis {
   exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "genghisapp"'
@@ -204,9 +194,16 @@ class install_genghis{
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "bson_ext (1.9.2)"'
   }
+  $gcmd='genghisapp --foreground --port 5556'
+  supervisor::program { 'genghisapp':
+    ensure      => present,
+    enable      => true,
+    command     => $gcmd,
+    environment => 'HOME=/home/vagrant',
+  }
 }
 
-class install_mongo{
+class install_mongo {
   package { 'mongodb':
     ensure => installed,
   }
@@ -218,6 +215,7 @@ class install_mongo{
   }
   include install_genghis
 }
+
 class toybox1 {
 
   file { '/etc/motd':
@@ -236,45 +234,37 @@ class toybox1 {
     # cwd          => '/var/www/project1',
     # timeout      => 0,
   }
+  python::requirements { 'test requirements' :
+    virtualenv => '/opt/toybox',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/tests/requirements.txt',
+  }
+
+  python::requirements { 'other requirements' :
+    virtualenv => '/opt/toybox',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/requirements.txt',
+  }
+
+  python::requirements { 'demo requirements' :
+    virtualenv => '/opt/toybox',
+    owner      => 'vagrant',
+    group      => 'vagrant',
+    requirements => '/vagrant/demos/requirements.txt',
+  }
 
   # see https://forge.puppetlabs.com/proletaryo/supervisor
   class { 'supervisor':
     include_superlance      => true,
     enable_http_inet_server => true,
   }
-
-  $fcmd='celery flower --broker=amqp://guest:guest@localhost:5672// --port=5555'
-  supervisor::program { 'flower':
-    ensure  => present,
-    enable  => true,
-    command => $fcmd,
-  }
-
-  $gcmd='genghisapp --foreground --port 5556'
-  supervisor::program { 'genghisapp':
-    ensure      => present,
-    enable      => true,
-    command     => $gcmd,
-    environment => 'HOME=/home/vagrant',
-  }
 }
 class update_apt {
   exec{'apt-get update':
     command => '/usr/bin/apt-get update',
     onlyif  => "/bin/sh -c '[ ! -f /var/cache/apt/pkgcache.bin ] || /usr/bin/find /etc/apt/* -cnewer /var/cache/apt/pkgcache.bin | /bin/grep . > /dev/null'",
-  }
-}
-class install_nginx{
-  class { 'nginx':
-    source_dir       => 'puppet:///modules/site/nginx_conf',
-    source_dir_purge => false,
-  }
-  file { '/opt/www':
-    ensure  => directory,
-    path    => '/opt/www',
-    require => File['/etc/nginx/nginx.conf'],
-    source  => 'puppet:///modules/site/www',
-    recurse => true,
   }
 }
 # configured to run the 'last' stage
@@ -291,45 +281,40 @@ node default {
   class{'update_apt': stage => first }
   class{'configuration': stage => last }
 
-  include basic_dev
+  # section covers basic needs for development
+  ##############################################################################
+  $basic_dev_misc_tools = parsejson($toybox_extra_packages)
+  package {$basic_dev_misc_tools:ensure => installed}
+
+  # basic ruby base is not optional: used by genghis etc
+  $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
+  package {$basic_dev_ruby_base:ensure => installed}
+
+  # git install is not optional: too useful to warrant a switch
+  class { git:
+    svn => 'absent',
+    gui => 'absent',
+  }
+
+  # python install is not optional: too useful to warrant a switch
+  class { 'python' :
+    version    => 'system',
+    pip        => true,
+    dev        => true,
+    virtualenv => true,
+    gunicorn   => false,
+  }
+
+  #
+  ##############################################################################
   include toybox1
   include my_code
 
-  if $toybox_provision_nginx {
-    notice("install_nginx")
-    include install_nginx
-  }
-
-  if $toybox_provision_mongo {
-    notice("install_mongo")
-    include install_mongo
-  }
-
-  if $toybox_provision_java {
-    notice("install_java")
-    include install_java
-  }
-  if $toybox_provision_rabbit {
-    notice("install_rabbit")
-    include install_rabbit
-  }
-  if $toybox_provision_xwin {
-    include xwindows
-  }
-  if $toybox_provision_elasticsearch{
-    notice("install_elk")
-    include elk_stack
-  }
-
-  if $toybox_provision_neo {
-    notice("install_neo")
-    # see https://github.com/opencredo/neo4j-puppet
-    include neo
-    exec {
-      'install-neo-python':
-        require => Package['python-pip'],
-        command => 'pip install neo4j-embedded',
-        unless  => 'pip freeze|grep neo4j-embedded'
-    }
-  }
+  if $toybox_provision_nginx { include install_nginx }
+  if $toybox_provision_mongo { include install_mongo }
+  if $toybox_provision_rabbit { include install_rabbit }
+  if $toybox_provision_xwin { include install_xwindows }
+  if $toybox_provision_java { include install_java }
+  if $toybox_provision_neo { include install_neo}
+  if $toybox_provision_elasticsearch{ include elk_stack }
 }

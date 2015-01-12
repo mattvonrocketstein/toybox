@@ -1,6 +1,7 @@
 """ tests/test_neo
 
     generates graphs with networkx and then writes them to neo
+    see: http://neonx.readthedocs.org/en/latest/contributing.html#get-started
 """
 import sys, os
 import argparse

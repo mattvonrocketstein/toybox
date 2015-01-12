@@ -15,11 +15,8 @@ class Settings(BaseSettings):
         parser = super(Settings, kls).get_parser()
         parser.add_option("--neo",  dest="neo",
                           default=False, help="")
-        #parser.add_option("--runner",  dest="runner",
-        #                  default='', help="dotpath for app server")
-        #parser.add_option("--encode", dest='encode',
-        #                  default="",
-        #                  help="encode password hash using werkzeug")
+        parser.add_option('-r', "--render",  dest="render",
+                          default=False, action='store_true', help="")
         return parser
 
     def shell_namespace(self):
@@ -27,8 +24,6 @@ class Settings(BaseSettings):
             subclasses should not forget to call super()!
         """
         out = super(Settings, self).shell_namespace()
-        #out.update(
-        #    views = self.get_views())
         return out
 
     def show_version(self):
