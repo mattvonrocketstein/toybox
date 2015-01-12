@@ -65,7 +65,7 @@ def entry():
         if not v:
             continue
         print k, v
-        os.environ[k] = v
+        os.environ[k] = str(v)
 
     if opts.provision:
         raw_input('\nenter to continue.\n')
