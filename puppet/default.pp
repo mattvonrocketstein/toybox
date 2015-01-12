@@ -140,18 +140,20 @@ class basic_dev{
     gunicorn   => false,
   }
 }
-
+define print() {
+   notice("The value is: '${name}'")
+}
 class install_java{
   case $operatingsystem {
     /(Ubuntu|Debian)/: {
-      $jreinstaller = 'default-jre'
+      $toybox_jreinstaller = 'default-jre'
     }
     /(RedHat|CentOS|Fedora)/: {
-      $jreinstaller = 'java-1.6.0-openjdk'
+      $toybox_jreinstaller = 'java-1.6.0-openjdk'
     }
   }
   package {
-    "${jreinstaller}":
+    "${toybox_jreinstaller}":
       ensure  => installed;
   }
 }
@@ -286,19 +288,23 @@ node default {
   include my_code
 
   if $toybox_provision_java {
+    notice("install_java")
     include install_java
   }
   if $toybox_provision_rabbit {
+    notice("install_rabbit")
     include install_rabbit
   }
   if $toybox_provision_xwin {
     include xwindows
   }
   if $toybox_provision_elasticsearch{
+    notice("install_elk")
     include elk_stack
   }
 
   if $toybox_provision_neo {
+    notice("install_neo")
     # see https://github.com/opencredo/neo4j-puppet
     include neo
     exec {
