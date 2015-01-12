@@ -93,6 +93,7 @@ class install_kibana {
 }
 
 class elk_stack {
+
   include install_kibana
 
   class { 'elasticsearch':
@@ -213,7 +214,8 @@ class install_mongo {
     tries   => 10,
     require => Package['mongodb']
   }
-  include install_genghis
+
+  if $toybox_provision_genghis { include install_genghis }
 }
 
 class toybox1 {

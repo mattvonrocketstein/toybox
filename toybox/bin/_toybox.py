@@ -49,6 +49,8 @@ def entry():
     tmp['PROVISION_XWIN']   = settings['xwindows'].get('enable', '')
     tmp['PROVISION_RABBIT'] = settings['rabbitmq'].get('enable', '')
     tmp['PROVISION_MONGO']  = settings['mongodb'].get('enable', '')
+    if tmp['PROVISION_MONGO']:
+        tmp['PROVISION_GENGHIS'] = settings['mongodb'].get('genghis', "")
 
     # transfer settings re: neo4j, elasticsearch
     tmp['PROVISION_NEO'] = settings['neo4j'].get('enable', "")

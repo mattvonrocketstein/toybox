@@ -8,8 +8,10 @@ FACTER[:toybox_provision_xwin] = ENV["PROVISION_XWIN"] or ""
 FACTER[:toybox_xwin_extra] = ENV["PROVISION_XWIN_EXTRA"] or ""
 FACTER[:toybox_extra_packages] = ENV["PROVISION_XTRAS"] or "[]"
 FACTER[:toybox_provision_neo] = ENV["PROVISION_NEO"] or ""
-FACTER[:toybox_provision_rabbit] = ENV["PROVISION_RABBIT"] or ""
 FACTER[:toybox_provision_mongo] = ENV["PROVISION_MONGO"] or ""
+FACTER[:toybox_provision_genghis] = ENV["PROVISION_GENGHIS"] or ""
+FACTER[:toybox_provision_rabbit] = ENV["PROVISION_RABBIT"] or ""
+
 FACTER[:toybox_provision_java] = ENV["PROVISION_JAVA"] or ""
 FACTER[:toybox_provision_elasticsearch] = ENV["PROVISION_ELASTICSEARCH"] or ""
 
@@ -17,7 +19,7 @@ VAGRANTFILE_API_VERSION = "2" # Vagrantfile API/syntax version.
 DEFAULT_NAME = "toybox" # used for hostname and virtualbox nickname
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "trusty64"
-  config.vm.hostname = DEFAULT_NAME
+  config.vm.hostname = DEFAULT_NAME + ".example.com"
 
   # The port map which creates access between guest/host:
   #   15672: this entry is for the rabbitmq WUI
@@ -35,26 +37,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 9001, host: 9001
   config.vm.network "forwarded_port", guest: 9200, host: 9200
   config.vm.network "forwarded_port", guest: 7474, host: 7474
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. Options are provider-specific.
