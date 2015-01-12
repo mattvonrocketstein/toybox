@@ -124,8 +124,8 @@ class elk_stack {
 class basic_dev{
 
   #$basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs', 'htop']
-  print{$toybox_extra_packages: }
-  $basic_dev_misc_tools = parsejson($toybox_extra_packages);
+  #print{$toybox_extra_packages: }
+  $basic_dev_misc_tools = parsejson($toybox_extra_packages)
   $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
   $basic_dev_scala_base = ['scala']
 
