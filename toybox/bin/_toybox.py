@@ -59,13 +59,10 @@ def entry():
     tmp['PROVISION_JAVA'] = tmp['PROVISION_ELASTICSEARCH'] or \
                             tmp['PROVISION_NEO']
 
-
     for k,v in tmp.items():
-        v = v and v not in [0, '0','false','False','no']
-        if not v:
-            continue
-        print k, v
-        os.environ[k] = json.dumps(v)
+        if v and v not in [0,'0','false']:
+            print k, v
+            os.environ[k] = v
 
     if opts.provision:
         raw_input('\nenter to continue.\n')
