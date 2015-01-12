@@ -65,7 +65,7 @@ def entry():
         if not v:
             continue
         print k, v
-        os.environ[k] = str(v)
+        os.environ[k] = json.dumps(v)
 
     if opts.provision:
         raw_input('\nenter to continue.\n')
