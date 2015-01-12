@@ -1,6 +1,7 @@
 """ toybox.bin._toybox
 """
 import os, json
+import subprocess
 from toybox.settings import Settings
 
 def entry():
@@ -31,5 +32,4 @@ def entry():
         print k, v
         os.environ[k] = v
     raw_input('\nenter to continue.\n')
-    import subprocess
-    subprocess.Popen(['vagrant','provision'], shell=True, env=os.environ.copy())
+    subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
