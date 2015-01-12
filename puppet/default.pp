@@ -1,5 +1,9 @@
 # default.pp
 #
+define print() {
+   notice("The value is: '${name}'")
+}
+
 class xwindows{
   $xwindows_xwin_base=['xinit']
   $xwindows_wm_utils = ['xmonad', 'xclip', 'dmenu','gmrun', 'stalonetray']
@@ -120,6 +124,7 @@ class elk_stack {
 class basic_dev{
 
   #$basic_dev_misc_tools = ['sysvbanner', 'ack-grep', 'mosh', 'tree','nmap', 'screen', 'sloccount', 'unzip', 'sshfs', 'htop']
+  print{$toybox_extra_packages: }
   $basic_dev_misc_tools = $toybox_extra_packages
   $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
   $basic_dev_scala_base = ['scala']
@@ -139,9 +144,6 @@ class basic_dev{
     virtualenv => true,
     gunicorn   => false,
   }
-}
-define print() {
-   notice("The value is: '${name}'")
 }
 class install_java{
   case $operatingsystem {
