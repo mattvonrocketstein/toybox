@@ -9,6 +9,7 @@ FACTER[:toybox_extra_packages] = ENV["PROVISION_XTRAS"] or "[]"
 #FACTER[:toybox_extra_packages] = JSON.parse FACTER[:toybox_extra_packages]
 FACTER[:toybox_provision_neo] = ENV["PROVISION_NEO"] or ""
 FACTER[:toybox_provision_rabbit] = ENV["PROVISION_RABBIT"] or ""
+FACTER[:toybox_provision_mongo] = ENV["PROVISION_MONGO"] or ""
 FACTER[:toybox_provision_java] = ENV["PROVISION_JAVA"] or ""
 FACTER[:toybox_provision_elasticsearch] = ENV["PROVISION_ELASTICSEARCH"] or ""
 

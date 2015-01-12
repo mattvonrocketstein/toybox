@@ -1,7 +1,7 @@
 # default.pp
 #
 define print() {
-   notice("The value is: '${name}'")
+  notice("The value is: '${name}'")
 }
 
 class xwindows{
@@ -45,15 +45,15 @@ class my_code{
   # this is needed to run tests and demos.
   # see toybox README.md
   python::virtualenv { '/vagrant/guest_venv' :
-      ensure       => present,
-      version      => 'system',
-      systempkgs   => true,
-      owner        => 'vagrant',
-      group        => 'vagrant',
-      # proxy        => 'http://proxy.domain.com:3128',
-      # distribute   => false,
-      # cwd          => '/var/www/project1',
-      # timeout      => 0,
+    ensure       => present,
+    version      => 'system',
+    systempkgs   => true,
+    owner        => 'vagrant',
+    group        => 'vagrant',
+    # proxy        => 'http://proxy.domain.com:3128',
+    # distribute   => false,
+    # cwd          => '/var/www/project1',
+    # timeout      => 0,
   }
 
   python::requirements { 'test requirements' :
@@ -145,6 +145,7 @@ class basic_dev{
     gunicorn   => false,
   }
 }
+
 class install_java{
   case $operatingsystem {
     /(Ubuntu|Debian)/: {
@@ -189,8 +190,18 @@ class install_rabbit{
                 Package['python-pip']],
   }
 }
-class toybox1 {
+class install_genghis{
+  exec { 'sudo gem install genghisapp':
+    require => [ Package['gem'], Package['ruby-dev']],
+    unless  => 'gem list|grep "genghisapp"'
+  }
+  exec { 'sudo gem install bson_ext -v 1.9.2':
+    require => [ Package['gem'], Package['ruby-dev']],
+    unless  => 'gem list|grep "bson_ext (1.9.2)"'
+  }
+}
 
+class install_mongo{
   package { 'mongodb':
     ensure => installed,
   }
@@ -200,17 +211,10 @@ class toybox1 {
     tries   => 10,
     require => Package['mongodb']
   }
+  include install_genghis
+}
+class toybox1 {
 
-
-  exec { 'sudo gem install genghisapp':
-    require => [ Package['gem'], Package['ruby-dev']],
-    unless  => 'gem list|grep "genghisapp"'
-  }
-
-  exec { 'sudo gem install bson_ext -v 1.9.2':
-    require => [ Package['gem'], Package['ruby-dev']],
-    unless  => 'gem list|grep "bson_ext (1.9.2)"'
-  }
 
   # see https://forge.puppetlabs.com/proletaryo/supervisor
   class { 'supervisor':
@@ -273,21 +277,26 @@ node default {
   }
 
   python::virtualenv { '/opt/toybox' :
-      ensure       => present,
-      version      => 'system',
-      systempkgs   => true,
-      owner        => 'vagrant',
-      group        => 'vagrant',
-      # proxy        => 'http://proxy.domain.com:3128',
-      # distribute   => false,
-      # cwd          => '/var/www/project1',
-      # timeout      => 0,
+    ensure       => present,
+    version      => 'system',
+    systempkgs   => true,
+    owner        => 'vagrant',
+    group        => 'vagrant',
+    # proxy        => 'http://proxy.domain.com:3128',
+    # distribute   => false,
+    # cwd          => '/var/www/project1',
+    # timeout      => 0,
   }
 
 
   include basic_dev
   include toybox1
   include my_code
+
+  if $toybox_provision_mongo {
+    notice("install_mongo")
+    include install_mongo
+  }
 
   if $toybox_provision_java {
     notice("install_java")
