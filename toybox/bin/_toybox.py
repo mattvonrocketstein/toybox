@@ -19,9 +19,14 @@ def entry():
     for k in settings.keys():
         tmp=k
         #print k,dict(settings[k])
-    packages = json.dumps(settings['packages'].keys())
+
+    pkgs = json.dumps(settings['packages'].keys())
+
+    xwin_pkgs = json.dumps(
+        [x for x in settings['xwindows'].get('packages','').split(',') if x])
+
     tmp={}
-    tmp['PROVISION_XTRAS'] = packages
+    tmp['PROVISION_XTRAS'] = pkgs
     tmp['PROVISION_NEO'] = settings['neo4j'].get('enable', "")
     tmp['PROVISION_XWIN'] = settings['xwindows'].get('enable', "")
     tmp['PROVISION_ELASTICSEARCH']  = settings['elasticsearch'].get("enable","")
@@ -29,6 +34,7 @@ def entry():
     tmp['PROVISION_MONGO']  = settings['mongodb'].get("enable", "")
     tmp['PROVISION_JAVA'] = tmp['PROVISION_ELASTICSEARCH'] or \
                             tmp['PROVISION_NEO']
+    tmp['PROVISION_XWIN_EXTRA'] = xwin_pkgs
     for k,v in tmp.items():
         print k, v
         if v and v not in [0,'0','false']:
