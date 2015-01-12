@@ -30,6 +30,7 @@ def entry():
                             tmp['PROVISION_NEO']
     for k,v in tmp.items():
         print k, v
-        os.environ[k] = v
+        if v:
+            os.environ[k] = v
     raw_input('\nenter to continue.\n')
     subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
