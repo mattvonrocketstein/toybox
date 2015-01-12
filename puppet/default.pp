@@ -156,18 +156,7 @@ class install_java{
   }
 }
 
-class toybox1{
-
-  package { 'mongodb':
-    ensure => installed,
-  }
-
-  mongodb_database { 'testdb':
-    ensure  => present,
-    tries   => 10,
-    require => Package['mongodb']
-  }
-
+class install_rabbit{
   class { 'rabbitmq':
     service_manage    => true,
     delete_guest_user => false
@@ -195,6 +184,19 @@ class toybox1{
                 Package['celeryd'],
                 Package['python-pip']],
   }
+}
+class toybox1 {
+
+  package { 'mongodb':
+    ensure => installed,
+  }
+
+  mongodb_database { 'testdb':
+    ensure  => present,
+    tries   => 10,
+    require => Package['mongodb']
+  }
+
 
   exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
@@ -285,6 +287,9 @@ node default {
 
   if $toybox_provision_java {
     include install_java
+  }
+  if $toybox_provision_rabbit {
+    include install_rabbit
   }
   if $toybox_provision_xwin {
     include xwindows
