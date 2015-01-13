@@ -2,9 +2,8 @@
 # vi: set ft=ruby :
 
 require 'json'
-JSON.parse(ENV['zoo']).each do|n| 
-  puts n 
-end 
+PMAP = ENV['TOYBOX_PORTMAP'] or "{}"
+PMAP = JSON.parse(PMAP)
 
 # Ask the environment for some facts about whether
 # the user has requested the optional provisioning
@@ -32,16 +31,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   5556:  this entry is for the genghisapp WUI
   #   9001:  this entry is for the supervisor WUI
   #   7474:  this entry is for the neo4j data/WUI
-  config.vm.network "forwarded_port", guest: 22, host: 8022
-  config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network "forwarded_port", guest: 8080, host: 8081
-  config.vm.network "forwarded_port", guest: 15672, host: 15672
-  config.vm.network "forwarded_port", guest: 5555, host: 5555
-  config.vm.network "forwarded_port", guest: 5556, host: 5556
-  config.vm.network "forwarded_port", guest: 5557, host: 5557
-  config.vm.network "forwarded_port", guest: 9001, host: 9001
-  config.vm.network "forwarded_port", guest: 9200, host: 9200
-  config.vm.network "forwarded_port", guest: 7474, host: 7474
+  PMAP.each do|n|
+    config.vm.network "forwarded_port", guest: n[1][0], host: n[1][1]
+  end
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. Options are provider-specific.
