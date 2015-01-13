@@ -2,7 +2,8 @@
 # vi: set ft=ruby :
 
 require 'json'
-PMAP = ENV['TOYBOX_PORTMAP'] or "{}"
+PMAP = ENV['TOYBOX_PORTMAP']
+PMAP||= "{}"
 PMAP = JSON.parse(PMAP)
 
 # Ask the environment for some facts about whether
