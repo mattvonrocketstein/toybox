@@ -1,5 +1,20 @@
 # requirements.txt for toybox
 #
+
+# toybox itself
 configparser
 goulash==0.52
 grip
+
+# the tests
+requests==2.3.0
+pytest
+
+# the demos
+fabric==1.10.0
+mongoengine==0.8.7
+faker==0.0.4
+bulbs==0.3
+#py2neo==1.6.4
+python-logstash==0.4.2
+elasticsearch

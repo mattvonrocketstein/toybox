@@ -2,20 +2,24 @@
 """
 import os, json
 import subprocess
+from functools import partial
 
 from toybox import util
+from toybox.data import DEFAULTS
 from toybox.settings import Settings
 
-INSTRUCTIONS = 'provision up'.split()
+INSTRUCTIONS = 'halt provision up'.split()
+
+system = lambda x: subprocess.call(x, shell=True, env=os.environ.copy())
+vagrant_instructions = ['provision', 'up']
 
 def entry():
     """ entry point from commandline """
     settings = Settings()
     opts, clargs = settings.get_parser().parse_args()
 
-    opts.up = False
-    opts.provision = False
-    opts.up = False
+    for i in vagrant_instructions:
+        setattr(opts, i, False)
 
     # handle clargs
     if clargs:
@@ -24,26 +28,35 @@ def entry():
                 "\nonly know how to parse one command "
                 "line argument.  try using one of: {0}").format(INSTRUCTIONS))
         cmd = clargs.pop().strip()
-        if cmd in ['provision', 'up']:
+        if cmd in vagrant_instructions:
             setattr(opts, cmd, True)
 
-    print 'opts:',opts
-    print 'args:',clargs
+    print 'opts:', opts,'\nargs',clargs
     for k in settings.keys():
         tmp=k
         #print k,dict(settings[k])
 
+    # deduce the puppet facts from toybox.ini
     facts = get_fact_env(settings)
+
+    # compute the port map implied by toybox.ini
     port_map = DEFAULTS.copy()
     port_map.update(get_portmap(facts, settings))
     facts.update(TOYBOX_PORTMAP=json.dumps(port_map))
+
+    # update environment with the facts
     set_fact_env(facts)
+
     if opts.provision:
         raw_input('\nenter to continue.\n')
-        subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
-    if opts.up:
+        system('vagrant provision')
+    elif opts.up:
         raw_input('\nenter to continue.\n')
-        subprocess.call('vagrant up', shell=True, env=os.environ.copy())
+        system('vagrant up')
+    elif opts.test:
+        cmd_t = 'TOYBOX_HOST={0} py.test -v {1}tests/'
+        cmd = cmd_t.format('localhost','')
+        system(cmd)
     elif opts.ports:
         print 'ports'
         for k,v in port_map.items():
@@ -52,8 +65,10 @@ def entry():
         util.render()
 
 def test_setting(settings, k):
-    """ returns True for 'true', False for `false` or 'no',
-        any other strings are passed through """
+    """ TODO: move into goulash
+        this function returns True for 'true', False for
+        `false` or 'no', any other strings are passed through
+    """
     k = k.split('.')
     tmp = settings
     while k:
@@ -62,6 +77,7 @@ def test_setting(settings, k):
             tmp = tmp[subsection]
         except KeyError:
             print 'no key {0} found in {1}'.format(subsection,dict(tmp))
+            return
 
     if isinstance(tmp, basestring):
         test = tmp not in ['0', 'false', 'no', 0]
@@ -73,20 +89,6 @@ def set_fact_env(tmp):
         if v and v not in [0,'0','false']:
             print k, v
             os.environ[k] = v
-
-DEFAULTS = {
-        'ssh':[22,8022],
-        'nginx':[8080, 8081],
-        'kibana':[8080, 8081],
-        'rabbit':[15672, 15672], # this entry is for the rabbitmq WUI
-        'flower':[5555, 5555],
-        'genghis':[5556, 5556],
-        'supervisor':[9001, 9001],
-        'elasticsearch':[9200, 9200],
-        'neo':[7474, 7474]
-        }
-
-from functools import partial
 
 def get_portmap(facts, settings):
     out={}
@@ -101,8 +103,9 @@ def get_portmap(facts, settings):
     #    return settings['mongo'].get('genghis_port',)
 
 def get_fact_env(settings):
-    # put arguments from .ini into os.environ before vagrant is
-    # called.  vagrant will then put these into the puppet facter
+    """ put arguments from .ini into os.environ before vagrant is
+        called.  vagrant will then put these into the puppet facter
+    """
     tmp = {}
 
     # compute json for main package list

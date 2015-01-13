@@ -1,8 +1,9 @@
 """ toybox.settings
 """
 import toybox
-from goulash.settings import Settings as BaseSettings
+#from goulash.settings import Settings as BaseSettings
 from goulash.settings import SettingsError
+from corkscrew.settings import Settings as BaseSettings
 #from goulash.project import project_find
 
 class Settings(BaseSettings):
@@ -16,6 +17,9 @@ class Settings(BaseSettings):
         parser = super(Settings, kls).get_parser()
         parser.add_option("--neo",  dest="neo",
                           default=False, help="")
+        parser.add_option("--test",  dest="test",
+                          default=False, action='store_true',
+                          help="run tests (works from guest or host)")
         parser.add_option("--ports",  action='store_true', dest="ports",
                           default=False, help="show ports")
         parser.add_option('-r', "--render",  dest="render",
