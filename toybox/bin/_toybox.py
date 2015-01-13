@@ -26,12 +26,76 @@ def entry():
         if cmd=='provision':
             opts.provision=True
 
-    print opts,clargs
+    print 'opts:',opts
+    print 'args:',clargs
     for k in settings.keys():
         tmp=k
         #print k,dict(settings[k])
 
+    facts = get_fact_env(settings)
+    set_fact_env(facts)
+    port_map = DEFAULTS.copy()
+    port_map.update(get_portmap(facts, settings))
+    if opts.provision:
+        raw_input('\nenter to continue.\n')
+        subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
+    elif opts.ports:
+        print 'ports',
+        for k,v in port_map.items():
+            print k,v
+    elif opts.render:
+        util.render()
 
+def test_setting(settings, k):
+    """ returns True for 'true', False for `false` or 'no',
+        any other strings are passed through """
+    k = k.split('.')
+    tmp = settings
+    while k:
+        subsection = k.pop(0)
+        try:
+            tmp = tmp[subsection]
+        except KeyError:
+            print 'no key {0} found in {1}'.format(subsection,dict(tmp))
+
+    if isinstance(tmp, basestring):
+        test = tmp not in ['0', 'false', 'no', 0]
+        if not test: return test
+    return tmp
+
+def set_fact_env(tmp):
+    for k,v in tmp.items():
+        if v and v not in [0,'0','false']:
+            print k, v
+            os.environ[k] = v
+
+DEFAULTS = {
+        'ssh':[22,8022],
+        'nginx':[8080, 8081],
+        'kibana':[8080, 8081],
+        'rabbit':[15672, 15672], # this entry is for the rabbitmq WUI
+        'flower':[5555, 5555],
+        'genghis':[5556, 5556],
+        'supervisor':[9001, 9001],
+        'elasticsearch':[9200, 9200],
+        'neo':[7474, 7474]
+        }
+
+from functools import partial
+
+def get_portmap(facts, settings):
+    out={}
+    test = partial(test_setting, settings)
+    if test('mongodb.enable') \
+       and test('mongodb.genghis'):
+        x = test('mongodb.genghis_port')
+        if x:
+            out['genghis'] = [x, x]
+    return out
+    #    and settings['mongo'].get('genghis')
+    #    return settings['mongo'].get('genghis_port',)
+
+def get_fact_env(settings):
     # put arguments from .ini into os.environ before vagrant is
     # called.  vagrant will then put these into the puppet facter
     tmp = {}
@@ -60,14 +124,4 @@ def entry():
     # java is installed if neo or elasticsearch are installed
     tmp['PROVISION_JAVA'] = tmp['PROVISION_ELASTICSEARCH'] or \
                             tmp['PROVISION_NEO']
-
-    for k,v in tmp.items():
-        if v and v not in [0,'0','false']:
-            print k, v
-            os.environ[k] = v
-
-    if opts.provision:
-        raw_input('\nenter to continue.\n')
-        subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
-    elif opts.render:
-        util.render()
+    return tmp
