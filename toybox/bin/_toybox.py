@@ -15,6 +15,7 @@ def entry():
 
     opts.up = False
     opts.provision = False
+    opts.up = False
 
     # handle clargs
     if clargs:
@@ -23,8 +24,8 @@ def entry():
                 "\nonly know how to parse one command "
                 "line argument.  try using one of: {0}").format(INSTRUCTIONS))
         cmd = clargs.pop().strip()
-        if cmd=='provision':
-            opts.provision=True
+        if cmd in ['provision', 'up']:
+            setattr(opts, cmd, True)
 
     print 'opts:',opts
     print 'args:',clargs
@@ -40,6 +41,9 @@ def entry():
     if opts.provision:
         raw_input('\nenter to continue.\n')
         subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
+    if opts.up:
+        raw_input('\nenter to continue.\n')
+        subprocess.call('vagrant up', shell=True, env=os.environ.copy())
     elif opts.ports:
         print 'ports'
         for k,v in port_map.items():
