@@ -1,6 +1,11 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require 'json'
+JSON.parse(ENV['zoo']).each do|n| 
+  puts n 
+end 
+
 # Ask the environment for some facts about whether
 # the user has requested the optional provisioning
 FACTER = {}
