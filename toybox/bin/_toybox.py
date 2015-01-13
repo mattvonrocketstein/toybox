@@ -33,14 +33,15 @@ def entry():
         #print k,dict(settings[k])
 
     facts = get_fact_env(settings)
-    set_fact_env(facts)
     port_map = DEFAULTS.copy()
     port_map.update(get_portmap(facts, settings))
+    facts.update(TOYBOX_PORTMAP=json.dumps(port_map))
+    set_fact_env(facts)
     if opts.provision:
         raw_input('\nenter to continue.\n')
         subprocess.call('vagrant provision', shell=True, env=os.environ.copy())
     elif opts.ports:
-        print 'ports',
+        print 'ports'
         for k,v in port_map.items():
             print k,v
     elif opts.render:
