@@ -255,7 +255,8 @@ class toybox1 {
     requirements => '/vagrant/demos/requirements.txt',
   }->
   exec {"install_toybox_cl":
-    command => 'cd /vagrant && /opt/toybox/bin/python setup.py install',
+    command => '/opt/toybox/bin/python setup.py install',
+    cwd     => '/vagrant',
   }
 
   # see https://forge.puppetlabs.com/proletaryo/supervisor
