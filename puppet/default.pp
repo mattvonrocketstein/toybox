@@ -235,26 +235,27 @@ class toybox1 {
     # distribute   => false,
     # cwd          => '/var/www/project1',
     # timeout      => 0,
-  }
+  }->
   python::requirements { 'test requirements' :
     virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
     requirements => '/vagrant/tests/requirements.txt',
-  }
-
+  }->
   python::requirements { 'other requirements' :
     virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
     requirements => '/vagrant/requirements.txt',
-  }
-
+  }->
   python::requirements { 'demo requirements' :
     virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
     requirements => '/vagrant/demos/requirements.txt',
+  }->
+  exec {"install_toybox_cl":
+    command => 'cd /vagrant && /opt/toybox/bin/python setup.py install',
   }
 
   # see https://forge.puppetlabs.com/proletaryo/supervisor

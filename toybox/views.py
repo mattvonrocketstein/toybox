@@ -15,26 +15,13 @@ class MyMenu(MakeMenu):
 
 class Home(View):
     url = '/'
-
-    @View.use_local_template
+    template = 'toybox_home.html'
+    #@View.use_local_template
     def main(self):
         """
-        <strong>various demos</strong>
-        <div style="margin-left:15px">
-            {% for k,v in demos.items()%}
-            <b><a href="{{k}}">{{k}}</a></b><br/><span style=margin-left:15px>
-            {{v}}</span><br/><br/>
-            {%endfor%}
-        </div><hr>
-        <strong>app metatdata</strong>
-        <table style="margin-left:15px">
-            {% for k,v in app_metadata.items()%}
-            <tr><td><b>{{k}}</b></td><td>{{v}}</td></tr>
-            {%endfor%}
-        </table><hr>
         """
-        return dict(
-            demos=OrderedDict(
+        return self.render(
+            demos = OrderedDict(
                 [ ['/comet?start=1','comet demo (via sijax)'],
                   ['/json_editor','a simple json editor'],
                   ['/redirect', ('example redirect (define as '
@@ -75,13 +62,22 @@ class DemoJSONEdit(JSONEdit):
                          arr=["foo", "ha"],
                          numero= 1))))
 from corkscrew.admin import AdminView
+
+class ToyboxAdminView(AdminView):
+    url = '/'
+    requires_auth = False
+    def main(self):
+        return self.render_template(
+            env='?', page_title='toybox')
+
+
 __views__ = [
-    Home, Nav,
+    #Home, Nav,
     #DemoPage,
     #DemoJSONEdit,
     #SijaxDemo,
     #RedirectsFromSettings,
     #MakeMenu,
-    #type('DemoAdminView', (AdminView,), dict(requires_auth=False)),
+    ToyboxAdminView
     #type('DemoSettingsView', (SettingsView,), dict(requires_auth=False)),
     ]
