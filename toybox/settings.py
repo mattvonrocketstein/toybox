@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     environ_key  = 'TOYBOX_SETTINGS'
     default_file = 'toybox.ini'
 
-    @classmethod
     def get_parser(kls):
         """ build the default parser """
         parser = super(Settings, kls).get_parser()
