@@ -3,7 +3,7 @@
 
 # toybox itself
 configparser
-goulash==0.52
+goulash==0.54
 grip
 
 # the tests

@@ -49,7 +49,12 @@ class my_code{
 
 class install_xwindows{
   $xwindows_xwin_base=['xinit']
-  $xwindows_extra = parsejson($toybox_xwin_extra)
+  if($toybox_vagrant_invocation){
+    $xwindows_extra = parsejson($toybox_xwin_extra)
+  }
+  else {
+    $xwindows_extra=[]
+  }
   package { $xwindows_xwin_base: ensure => installed}
   package { $xwindows_extra: ensure => installed}
 }
@@ -287,8 +292,17 @@ node default {
 
   # section covers basic needs for development
   ##############################################################################
-  $basic_dev_misc_tools = parsejson($toybox_extra_packages)
-  package {$basic_dev_misc_tools:ensure => installed}
+  # note: this is possibly empty, but always passed in if puppet is invoked
+  #       by vagrant. the case makes it work correctly with puppet apply
+  if $toybox_extra_packages {
+      $basic_dev_misc_tools = parsejson($toybox_extra_packages)
+      package {$basic_dev_misc_tools:ensure => installed}
+  }
+  else {
+    notify {"no fact found for 'toybox_extra_packages'": }
+  }
+
+
 
   # basic ruby base is not optional: used by genghis etc
   $basic_dev_ruby_base = ['ruby', 'ruby-dev', 'gem']
@@ -314,11 +328,22 @@ node default {
   include toybox1
   include my_code
 
-  if $toybox_provision_nginx { include install_nginx }
-  if $toybox_provision_mongo { include install_mongo }
-  if $toybox_provision_rabbit { include install_rabbit }
-  if $toybox_provision_xwin { include install_xwindows }
-  if $toybox_provision_java { include install_java }
-  if $toybox_provision_neo { include install_neo}
-  if $toybox_provision_elasticsearch{ include elk_stack }
+  if $toybox_vagrant_invocation {
+    if $toybox_provision_nginx { include install_nginx }
+    if $toybox_provision_mongo { include install_mongo }
+    if $toybox_provision_rabbit { include install_rabbit }
+    if $toybox_provision_xwin { include install_xwindows }
+    if $toybox_provision_java { include install_java }
+    if $toybox_provision_neo { include install_neo}
+    if $toybox_provision_elasticsearch{ include elk_stack }
+  }
+  else {
+    include install_nginx
+    include install_mongo
+    include install_rabbit
+    include install_xwindows
+    include install_java
+    include install_neo
+    include elk_stack
+  }
 }

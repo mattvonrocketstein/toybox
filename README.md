@@ -26,10 +26,9 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
 * ELK stack
 
     * [kibana](http://www.elasticsearch.org/overview/kibana/): the k in your ELK stack
-        * default port @ 9200
+        * default port is 5557 (served via nginx)
         * version is 1.2.1
     * [logstash](http://logstash.net/):
-        * default port @ 9200
         * version is 1.2.1
     * [elasticsearch](http://www.elasticsearch.org): you know, for search
         * default port @ 9200
@@ -221,6 +220,7 @@ Issues can be raised on [the bugtracker](https://github.com/mattvonrocketstein/t
 <a name="qlinks"/>
 ##Quick links:
 This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
+
 * [kibana](http://localhost:5557/#/dashboard/file/toybox.json)
 * [kopf (elasticsearch)](http://localhost:9200/_plugin/kopf/#!/cluster)
 * [genghis (mongo)](http://admin:admin@localhost:5556)

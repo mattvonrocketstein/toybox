@@ -9,6 +9,7 @@ PMAP = JSON.parse(PMAP)
 # Ask the environment for some facts about whether
 # the user has requested the optional provisioning
 FACTER = {}
+FACTER[:toybox_vagrant_invocation] = "true"
 FACTER[:toybox_provision_xwin] = ENV["PROVISION_XWIN"] or ""
 FACTER[:toybox_xwin_extra] = ENV["PROVISION_XWIN_EXTRA"] or ""
 FACTER[:toybox_extra_packages] = ENV["PROVISION_XTRAS"] or "[]"
