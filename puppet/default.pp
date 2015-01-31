@@ -137,6 +137,13 @@ class elk_stack {
                 ensure  => file,
                 content => template('site/logstash.conf.erb'),
               }->
+              # the scripts installed by default into /etc/init.d/logstash
+              # are completely haywire, ignore stop requests, and eat up all
+              # cpu.  besides, we want to manage it with supervisor anyway
+              service { "logstash":
+                ensure => "stopped",
+                enable => "false",
+              }->
                 supervisor::program { 'logstash':
                   ensure      => present,
                   enable      => true,
@@ -248,9 +255,14 @@ class toybox1 {
     # cwd          => '/var/www/project1',
     # timeout      => 0,
   }->
+  exec {"slash_vagrant":
+    command => '/bin/true',
+    onlyif => '/usr/bin/test -e /vagrant',
+  }
   python::requirements { 'test requirements' :
     virtualenv => '/opt/toybox',
     owner      => 'vagrant',
+    require => Exec["slash_vagrant"],
     group      => 'vagrant',
     requirements => '/vagrant/tests/requirements.txt',
   }->
@@ -258,16 +270,19 @@ class toybox1 {
     virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
+    require => Exec["slash_vagrant"],
     requirements => '/vagrant/requirements.txt',
   }->
   python::requirements { 'demo requirements' :
     virtualenv => '/opt/toybox',
     owner      => 'vagrant',
     group      => 'vagrant',
+    require => Exec["slash_vagrant"],
     requirements => '/vagrant/demos/requirements.txt',
   }->
   exec {"install_toybox_cl":
     command => '/opt/toybox/bin/python setup.py install',
+    require => Exec["slash_vagrant"],
     cwd     => '/vagrant',
   }
 
