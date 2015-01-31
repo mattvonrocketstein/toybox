@@ -30,6 +30,7 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
         * version is 1.2.1
     * [logstash](http://logstash.net/):
         * version is 1.2.1
+        * default port @ 9292
     * [elasticsearch](http://www.elasticsearch.org): you know, for search
         * default port @ 9200
         * version is 1.2.1
@@ -221,7 +222,8 @@ Issues can be raised on [the bugtracker](https://github.com/mattvonrocketstein/t
 ##Quick links:
 This markdown file is rendered to html and used as the default landing page for the toybox nginx installation.  If you're looking at that page, you might find the following links useful:
 
-* [kibana](http://localhost:5557/#/dashboard/file/toybox.json)
+* [logstash](http://localhost:9292/index.html#/dashboard/file/logstash.json)
+* [kibana (custom dashboard)](http://localhost:5557/#/dashboard/file/toybox.json)
 * [kopf (elasticsearch)](http://localhost:9200/_plugin/kopf/#!/cluster)
 * [genghis (mongo)](http://admin:admin@localhost:5556)
 * [flower (celery)](http://admin:admin@localhost:5555)

@@ -136,7 +136,14 @@ class elk_stack {
               file { '/etc/logstash/conf.d/logstash.conf':
                 ensure  => file,
                 content => template('site/logstash.conf.erb'),
-              }
+              }->
+                supervisor::program { 'logstash':
+                  ensure      => present,
+                  enable      => true,
+                  command     => '/opt/logstash/bin/logstash agent --debug --log /var/log/logstash/logstash.log -f hello.conf web',
+                  environment => 'HOME=/home/vagrant',
+                }
+
 }
 
 class install_java{

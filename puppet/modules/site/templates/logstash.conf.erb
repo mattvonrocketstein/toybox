@@ -1,23 +1,21 @@
 input {
-  file {
+    file {
     path => "/var/log/syslog"
     type => "syslog"
   }
-}
-filter {
-  if [type] == "syslog" {
-    grok {
-      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
-      add_field => [ "received_at", "%{@timestamp}" ]
-      add_field => [ "received_from", "%{host}" ]
-    }
-    syslog_pri { }
-    date {
-      match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-    }
+  stdin {
+    # A type is a label applied to an event. It is used later with filters
+    # to restrict what filters are run against each event.
+    type => "human"
   }
 }
+
 output {
   elasticsearch { host => localhost }
-  stdout { codec => rubydebug }
+  # Print each event to stdout.
+  stdout {
+    # Enabling 'rubydebug' codec on the stdout output will make logstash
+    # pretty-print the entire event as something similar to a JSON representation.
+    codec => rubydebug
+  }
 }
