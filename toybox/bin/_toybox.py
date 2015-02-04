@@ -5,20 +5,25 @@ import subprocess
 from functools import partial
 
 from toybox import util
-from toybox.data import DEFAULTS
+from toybox.data import DEFAULTS, PUPPET
 from toybox.settings import Settings
 
 INSTRUCTIONS = 'halt provision up'.split()
 
 system = lambda x: subprocess.call(x, shell=True, env=os.environ.copy())
 vagrant_instructions = ['provision', 'up']
+puppet_instructions = ['apply']
+apply_cmd = ('sudo puppet apply --verbose '
+             '--logdest=/var/log/puppet/provision.log '
+             '--modulepath={0}/modules'
+             ' {0}/default.pp').format(PUPPET)
 
 def entry():
     """ entry point from commandline """
     settings = Settings()
     opts, clargs = settings.get_parser().parse_args()
 
-    for i in vagrant_instructions:
+    for i in vagrant_instructions + puppet_instructions:
         setattr(opts, i, False)
 
     # handle clargs
@@ -28,7 +33,7 @@ def entry():
                 "\nonly know how to parse one command "
                 "line argument.  try using one of: {0}").format(INSTRUCTIONS))
         cmd = clargs.pop().strip()
-        if cmd in vagrant_instructions:
+        if cmd in vagrant_instructions + puppet_instructions:
             setattr(opts, cmd, True)
 
     print 'opts:', opts,'\nargs',clargs
@@ -50,6 +55,8 @@ def entry():
     if opts.provision:
         raw_input('\nenter to continue.\n')
         system('vagrant provision')
+    elif opts.apply:
+        system(apply_cmd)
     elif opts.up:
         raw_input('\nenter to continue.\n')
         system('vagrant up')

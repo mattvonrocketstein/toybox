@@ -139,18 +139,24 @@ class elk_stack {
               }->
               # the scripts installed by default into /etc/init.d/logstash
               # are completely haywire, ignore stop requests, and eat up all
-              # cpu.  besides, we want to manage it with supervisor anyway
+              # cpu.  see this page for more info:
+              # http://stackoverflow.com/questions/25867244/100-cpu-usage-after-logstash-install
+              # besides, we want to manage it with supervisor anyway
               service { "logstash":
                 ensure => "stopped",
                 enable => "false",
               }->
-                supervisor::program { 'logstash':
+              service { "logstash-web":
+                ensure => "stopped",
+                enable => "false",
+              }->
+              supervisor::program { 'logstash':
                   ensure      => present,
                   enable      => true,
-                  command     => '/opt/logstash/bin/logstash agent --debug --log /var/log/logstash/logstash.log -f hello.conf web',
+                  command     => 'sudo /opt/logstash/bin/logstash agent --debug --log /var/log/logstash/logstash.log -f /etc/logstash/conf.d/logstash.conf web --port 9292',
                   environment => 'HOME=/home/vagrant',
-                }
-
+                }->
+                notify {'finished logstash configuration':}
 }
 
 class install_java{
@@ -209,7 +215,8 @@ class install_genghis {
   exec { 'sudo gem install genghisapp':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "genghisapp"'
-  }
+  }-> notify {'finished genghisapp installation':}
+
   exec { 'sudo gem install bson_ext -v 1.9.2':
     require => [ Package['gem'], Package['ruby-dev']],
     unless  => 'gem list|grep "bson_ext (1.9.2)"'

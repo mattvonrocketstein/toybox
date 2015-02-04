@@ -1,7 +1,16 @@
 input {
-    file {
+  file {
     path => "/var/log/syslog"
     type => "syslog"
+  }
+  file {
+    path => "/does/not/exist"
+    type => "not_gonna_happen"
+  }
+  file {
+    path => ["/var/log/puppet/*"]
+    add_field => [ "env", "prd"]
+    type => "puppet"
   }
   stdin {
     # A type is a label applied to an event. It is used later with filters
