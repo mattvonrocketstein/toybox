@@ -43,7 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Use VBoxManage to customize the VM. For example to change memory:
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true       # toggle on/off for headless mode
-    vb.name = "zoo"
+    vb.name = DEFAULT_NAME
     vb.customize ["modifyvm", :id, "--vram", "16"]
     vb.customize ["modifyvm", :id, "--memory", "1024"]
     vb.customize ["setextradata", "global", "GUI/MaxGuestResolution", "any"]

@@ -8,7 +8,7 @@ from toybox import util
 from toybox.data import DEFAULTS, PUPPET
 from toybox.settings import Settings
 
-INSTRUCTIONS = 'halt provision up'.split()
+INSTRUCTIONS = 'halt destroy list provision up'.split()
 
 system = lambda x: subprocess.call(x, shell=True, env=os.environ.copy())
 vagrant_instructions = ['provision', 'up']
