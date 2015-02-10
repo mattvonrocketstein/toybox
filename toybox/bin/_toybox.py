@@ -125,9 +125,11 @@ def get_fact_env(settings):
     tmp['PROVISION_XWIN_EXTRA'] = xwin_pkgs
 
     # transfer settings re: rabbit, mongo, xwin
-    tmp['PROVISION_XWIN']   = settings['xwindows'].get('enable', '')
-    tmp['PROVISION_RABBIT'] = settings['rabbitmq'].get('enable', '')
-    tmp['PROVISION_MONGO']  = settings['mongodb'].get('enable', '')
+    tmp['PROVISION_HOSTNAME'] = settings['toybox'].get('name', '')
+    tmp['PROVISION_XWIN']     = settings['xwindows'].get('enable', '')
+    tmp['PROVISION_RABBIT']   = settings['rabbitmq'].get('enable', '')
+    tmp['PROVISION_MONGO']    = settings['mongodb'].get('enable', '')
+    tmp['PROVISION_MONGO']    = settings['mongodb'].get('enable', '')
     if tmp['PROVISION_MONGO']:
         tmp['PROVISION_GENGHIS'] = settings['mongodb'].get('genghis', "")
 

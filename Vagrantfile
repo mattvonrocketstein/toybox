@@ -22,7 +22,8 @@ FACTER[:toybox_provision_java] = ENV["PROVISION_JAVA"] or ""
 FACTER[:toybox_provision_elasticsearch] = ENV["PROVISION_ELASTICSEARCH"] or ""
 
 VAGRANTFILE_API_VERSION = "2" # Vagrantfile API/syntax version.
-DEFAULT_NAME = "toybox" # used for hostname and virtualbox nickname
+# used for hostname and virtualbox nickname
+DEFAULT_NAME = ENV["PROVISION_HOSTNAME"] or "toybox"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "trusty64"
   config.vm.hostname = DEFAULT_NAME + ".example.com"
