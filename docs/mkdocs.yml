@@ -1,0 +1,12 @@
+site_name: toybox
+theme_dir: glsh
+site_dir: site
+docs_dir: docs
+repo_url: https://github.com/mattvonrocketstein/toybox.git
+site_author: mvr
+pages:
+- 'Home': 'index.md'
+- 'Usage': 'toybox_usage/index.md'
+- 'Contributing': 'contributing.md'
+- 'Quick Links': 'quick_links.md'
+- 'Demos and Tests': 'tests.md'
