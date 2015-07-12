@@ -70,18 +70,27 @@ A known working base-box is Ubuntu 14.04 "trusty" (for download command, see "Us
     * xmonad implicitly requires haskell
 
 <a name="usage"/>
-## Basic Usage
+## Quick Start
 
-First we'll need to download a couple of things.  Feel free to skip steps below if you have already cloned this repository, if you already know that you have the right base-box downloaded, or if the vagrant plugin is already installed.
+1. Clone the repository and cd into it
 
-```shell
+```shell 
   $ git clone https://github.com/mattvonrocketstein/toybox.git
   $ cd toybox
-  $ vagrant box add trusty64 https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box
-  $ vagrant plugin install vagrant-vbguest
 ```
 
-Now we'll bring the box up and start the provisioning.  This will take a long time while it imports the basebox, bootstraps it, and then runs the provisioning.   Notes:  Subsequent calls like the one below will not by default rerun provisioning.  If vbguest detects a mismatched guest-additions iso, it may take even longer while it corrects this but it is better to fix it ASAP.
+2. Bootstrap vagrant with the plugins/basebox toybox uses
+
+```shell
+  $ vagrant box add trusty64 https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box
+  $ vagrant plugin install vagrant-vbguest
+  $ vagrant plugin install vagrant-scp
+```
+
+3.  Bring up the toybox and provision it (this will take a long time while it imports 
+the basebox, bootstraps it, and then runs the provisioning.   Notes:  Subsequent calls
+ like the one below will not by default rerun provisioning.  (Note that if vbguest 
+detects a mismatched guest-additions iso, it may tke even longer while it corrects this)
 
 ```shell
   $ vagrant up
@@ -95,13 +104,16 @@ If you don't see the _"non-zero exit status"_ message, then it probably succeede
   $ vagrant reload
 ```
 
-After this, your box should be working.  You can connect to it now, or try [running the tests](#running-tests).
+After this, your box should be working.  You can connect to it now with the `vagrant ssh` command or try [running the tests](#running-tests).  
+
+**You might want to send over some ssh keys to your fresh new development box.**
+  To copy everything except for the local autothorized_keys into your toybox, 
 
 ```shell
-   $ vagrant ssh
+find ~/.ssh -type f|grep -v authorized_keys|xargs -I{} vagrant scp {} /home/vagrant/.ssh/
 ```
 
-<a name="optional-provisioning-xwin"/>
+a name="optional-provisioning-xwin"/>
 ##Advanced Usage: Optional Provisioning
 The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.
 
