@@ -11,7 +11,31 @@
 
     
     <url>
-     <loc>None/api/</loc>
+     <loc>None/toybox_usage/</loc>
+     <lastmod>2015-07-12</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>None/contributing/</loc>
+     <lastmod>2015-07-12</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>None/quick_links/</loc>
+     <lastmod>2015-07-12</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>None/tests/</loc>
      <lastmod>2015-07-12</lastmod>
      <changefreq>daily</changefreq>
     </url>

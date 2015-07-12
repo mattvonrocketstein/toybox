@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="mvr">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Usage - toybox</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <link href="../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">toybox</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li >
+                    <a href="..">Home</a>
+                </li>
+            
+            
+            
+                <li class="active">
+                    <a href="./">Usage</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../contributing/">Contributing</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../quick_links/">Quick Links</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../tests/">Demos and Tests</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li >
+                    <a rel="next" href="..">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../contributing/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/mattvonrocketstein/toybox.git">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#quick-start">Quick Start</a></li>
+        
+    
+        <li class="main "><a href="#advanced-usage-optional-provisioning">Advanced Usage: Optional Provisioning</a></li>
+        
+            <li><a href="#provisioning-xwindows">Provisioning XWindows</a></li>
+        
+            <li><a href="#provisioning-neo">Provisioning Neo</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<p><a name="usage"></a></p>
+<h2 id="quick-start">Quick Start</h2>
+<p><strong>Clone the repository and cd into it</strong></p>
+<pre><code class="shell">  $ git clone https://github.com/mattvonrocketstein/toybox.git
+  $ cd toybox
+</code></pre>
+
+<p><strong>Bootstrap vagrant with the plugins and basebox toybox uses</strong></p>
+<pre><code class="shell">  $ vagrant box add trusty64 https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box
+  $ vagrant plugin install vagrant-vbguest
+  $ vagrant plugin install vagrant-scp
+</code></pre>
+
+<p><strong>Bring up the new toybox and provision it</strong>.  This will take a long time while the basebox is bootstrapped and the provisioning downloads package updates.  Also Note that if vbguest detects a mismatched guest-additions iso, it may tke even longer while it corrects this.  <em>Subsequent calls like the one below will not by default rerun provisioning.</em></p>
+<pre><code class="shell">  $ vagrant up
+</code></pre>
+
+<p>If the command above happens to terminate with a red message <em>"The SSH command responded with a non-zero exit status.  Vagrant assumes that this means the command failed"</em>, it might be caused by some download via apt, gem, or pip which has timed out.  If that's the case, you may want to retry provisioning by executing  <code>vagrant provision</code>.</p>
+<p>If you don't see the <em>"non-zero exit status"</em> message, then it probably succeeded.  But just to be sure that puppet hasn't missed starting or restarting a service that it's updated, you should run</p>
+<pre><code class="shell">  $ vagrant reload
+</code></pre>
+
+<p><strong>If you got this far, your new box should alreaady be setup and working</strong>.  You can connect to it now with the <code>vagrant ssh</code> command or try <a href="#running-tests">running the tests</a>.</p>
+<p><strong>You might want to send over some ssh keys to your fresh new development box.</strong>
+  To copy everything except for the local autothorized_keys into your toybox,</p>
+<pre><code class="shell">  $ find ~/.ssh -type f|grep -v authorized_keys|xargs -I{} vagrant scp {} /home/vagrant/.ssh/
+</code></pre>
+
+<p><a name="optional-provisioning-xwin"></a></p>
+<h2 id="advanced-usage-optional-provisioning">Advanced Usage: Optional Provisioning</h2>
+<p>The optional items are optional mostly because they are big.  You probably don't want this stuff to slow down your install on a slow connections or headless box.</p>
+<h4 id="provisioning-xwindows">Provisioning XWindows</h4>
+<p>If you wish to use the optional xwindows setup, I strongly suggest installing the vbguest plugin <a href="https://github.com/dotless-de/vagrant-vbguest">vbguest plugin</a>.  (<em>Note: Unfortunately even then getting full-screen resolution to work may still take some extra fiddling, the situation seems to change slightly with every minor-version release of guest-extensions/virtualbox.)</em> If you want to change the window manager or other details of this aspect of provisioning, fork this repo and edit <code>toybox/puppet/modules/site/manifests/xwindows.pp</code>.  <strong>To enable provisioning for xwindows, run</strong>:</p>
+<pre><code class="shell">  $ PROVISION_XWIN=true vagrant provision
+</code></pre>
+
+<p><a name="optional-provisioning-neo"></a></p>
+<h4 id="provisioning-neo">Provisioning Neo</h4>
+<p>Provisioning neo is similar to provisioning XWindows, but you will need to download their distribution tarball first.  Note: before you start the download, make sure that you're still in the same directory as this README and the Vagrantfile.</p>
+<pre><code class="shell">  $ wget http://dist.neo4j.org/neo4j-community-1.7.2-unix.tar.gz
+  $ PROVISION_NEO=true vagrant provision
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+        </footer>
+        <script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>

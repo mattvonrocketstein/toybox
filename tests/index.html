@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="mvr">
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>Demos and Tests - toybox</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="../css/highlight.css">
+        <link href="../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="..">toybox</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li >
+                    <a href="..">Home</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../toybox_usage/">Usage</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../contributing/">Contributing</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="../quick_links/">Quick Links</a>
+                </li>
+            
+            
+            
+                <li class="active">
+                    <a href="./">Demos and Tests</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li >
+                    <a rel="next" href="../quick_links/">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li class="disabled">
+                    <a rel="prev" >
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/mattvonrocketstein/toybox.git">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#running-tests">Running Tests</a></li>
+        
+    
+        <li class="main "><a href="#running-demos">Running Demos</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<p><a name="running-tests"/></p>
+<h2 id="running-tests">Running Tests</h2>
+<p>Tests can be run from either the guest or the host, but the meaning of each is slightly different.  Tests will autodetect whether they are running from the guest or the host based on the presence of the <code>/vagrant</code> directory.</p>
+<p>By default, the Vagrantfile forwards lots of ports for the services puppet is expected to bring up.  During development it can be useful to verify that those services are indeed alive.  To bootstrap the testing-setup on the host:</p>
+<pre><code class="shell">  $ virtualenv host_venv
+  $ source host_venv/bin/activate
+  $ pip install -r tests/requirements.txt
+  $ python tests/test_guest.py
+</code></pre>
+
+<p>During normal provisioning, <code>guest_venv</code> is setup automatically.  To run tests on the guest from the guest, run this command from the host:</p>
+<pre><code class="shell">  $ vagrant ssh -c &quot;/vagrant/guest_venv/bin/python /vagrant/tests/test_guest.py&quot;
+</code></pre>
+
+<p><a name="running-demos"/></p>
+<h2 id="running-demos">Running Demos</h2>
+<p>During default provisioning, databases, message queues, and visualization aids are setup but there is no data to populate them.  Demos included with toybox are just code examples to create some traffic.  All demos require you to connect to the guest and source the main guest virtual-environment:</p>
+<pre><code class="shell">  $ vagrant ssh # connect to guest
+  $ source /vagrant/guest_venv/bin/activate # run this from guest
+</code></pre>
+
+<p>To run the <strong>celery/rabbit demo</strong> follows the instructions below.  You can confirm the operations by watching graphs change in real time on your local <a href="http://admin:admin@localhost:5555">flower</a> and <a href="http://admin:admin@localhost:15672">rabbitmq</a> servers.</p>
+<pre><code class="shell">  # send 1000 and 500 tasks to add and subtract worker, respectively
+  $ python /vagrant/demos/demo_celery.py --add -n 1000
+  $ python /vagrant/demos/demo_celery.py --add -n 500
+  # start a worker to deal with tasks
+  $ python /vagrant/demos/demo_celery.py --worker
+</code></pre>
+
+<p>To run the <strong>MongoDB demo</strong> follow the instructions below.  You can confirm the operations by checking <a href="http://admin:admin@localhost:5556">your local genghisapp</a>, specifically the <a href="http://localhost:5556/servers/localhost/databases/testdb/collections/user">user collection</a>.</p>
+<pre><code class="shell">  # create 50 fake users
+  $ python /vagrant/demos/demo_mongo.py --records 50
+</code></pre>
+
+<p>To run the <strong>Neo4j demo</strong> you must already have done some of the <a href="#optional-provisioning">optional provisioning</a>, and then you can follow the instructions below. If it's not present on the guest in the /vagrant directory, the example movies database will be downloaded and afterwards it will be loaded into your neo server.  After loading a dataset, visit <a href="http://localhost:7474/webadmin/#/data/search/0/">your local neo server</a>.  If you want to start over, you can flush the database by using the <code>--wipedb</code> argument to the <code>demo_neo.py</code> script.  See the script code for other usage instructions.</p>
+<pre><code class="shell">  # load default datset &quot;cieasts_12k_movies_50k&quot;
+  $ python /vagrant/demos/demo_neo.py
+</code></pre></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+        </footer>
+        <script src="../js/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>
